@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 
 
 def apply_theme() -> None:
@@ -37,8 +38,17 @@ def apply_theme() -> None:
             [data-testid="stHeader"],
             [data-testid="stToolbar"],
             [data-testid="stStatusWidget"],
-            [data-testid="stDecoration"] {
+            [data-testid="stDecoration"],
+            [data-testid="stHeaderActionElements"],
+            [data-testid="stMainMenu"],
+            header,
+            .stAppHeader,
+            .st-emotion-cache-18ni7ap,
+            .st-emotion-cache-zq5wmm {
                 display: none;
+            }
+            .block-container {
+                padding-top: 1.25rem;
             }
             [data-testid="stSidebar"] {
                 background: linear-gradient(180deg, rgba(13, 20, 32, 0.98) 0%, rgba(10, 16, 26, 0.98) 100%);
@@ -202,4 +212,48 @@ def apply_theme() -> None:
         </style>
         """,
         unsafe_allow_html=True,
+    )
+    components.html(
+        """
+        <script>
+        const hideChrome = () => {
+          const parentDoc = window.parent.document;
+          const selectors = [
+            '[data-testid="stHeader"]',
+            '[data-testid="stToolbar"]',
+            '[data-testid="stStatusWidget"]',
+            '[data-testid="stDecoration"]',
+            '[data-testid="stHeaderActionElements"]',
+            '[data-testid="stMainMenu"]',
+            'header',
+            '.stAppHeader'
+          ];
+
+          selectors.forEach((selector) => {
+            parentDoc.querySelectorAll(selector).forEach((node) => {
+              node.style.display = 'none';
+              node.style.visibility = 'hidden';
+              node.style.height = '0';
+              node.style.minHeight = '0';
+            });
+          });
+
+          parentDoc.querySelectorAll('button, div, section, span').forEach((node) => {
+            const text = (node.innerText || '').trim();
+            if (text === 'RUNNING...' || text === 'RUNNING…' || text === 'Stop' || text === 'Deploy') {
+              const chip = node.closest('div, section, header');
+              if (chip) {
+                chip.style.display = 'none';
+                chip.style.visibility = 'hidden';
+              }
+            }
+          });
+        };
+
+        hideChrome();
+        setInterval(hideChrome, 800);
+        </script>
+        """,
+        height=0,
+        width=0,
     )
