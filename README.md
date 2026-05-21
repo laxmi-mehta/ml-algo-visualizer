@@ -3,9 +3,7 @@ title: ML Algo Visualizer
 emoji: 📈
 colorFrom: blue
 colorTo: indigo
-sdk: streamlit
-sdk_version: 1.44.0
-app_file: app.py
+sdk: docker
 pinned: false
 ---
 
@@ -97,10 +95,10 @@ python -m streamlit run app.py
 This project is ready for Streamlit-based hosting platforms including Streamlit Community Cloud and Hugging Face Spaces.
 
 - App entry file: `app.py`
-- Spaces SDK: `streamlit`
+- Spaces SDK: `docker`
 - Keep `.streamlit/secrets.toml` local
 - Do not commit virtual environments, cache folders, or generated log files
-- Do not add a custom Streamlit server port when deploying to Hugging Face Spaces
+- Hugging Face Spaces uses the included `Dockerfile` to start the Streamlit app on the correct host and port
 
 Recommended GitHub repo name:
 
