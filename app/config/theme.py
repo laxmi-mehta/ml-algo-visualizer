@@ -1,10 +1,12 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
+from app.config.app_config import APP_TITLE
+
 
 def apply_theme() -> None:
     st.set_page_config(
-        page_title="ML Algorithm Visualizer",
+        page_title=APP_TITLE,
         page_icon="📈",
         layout="wide",
         initial_sidebar_state="expanded",

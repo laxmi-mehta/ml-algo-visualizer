@@ -1,3 +1,14 @@
+---
+title: ML Algo Visualizer
+emoji: 📈
+colorFrom: blue
+colorTo: indigo
+sdk: streamlit
+sdk_version: 1.44.0
+app_file: app.py
+pinned: false
+---
+
 # ML Algo Visualizer
 
 ML Algo Visualizer is an interactive Streamlit project that helps learners understand machine learning algorithms through parameter controls, visual feedback, metrics, and plain-English explanations.
@@ -15,7 +26,7 @@ This project turns common machine learning algorithms into a guided visual learn
 - Concept visualizers for Gradient Descent, Regularization, and Overfitting vs Underfitting
 - Suggested learning paths for beginners, interview preparation, and concept-first learning
 - Beginner-friendly explanations, interpretation notes, and common mistakes on each page
-- Deployment-ready structure for GitHub and Streamlit Community Cloud
+- Deployment-ready structure for GitHub, Streamlit Community Cloud, and Hugging Face Spaces
 
 ## Tech Stack
 
@@ -83,7 +94,13 @@ python -m streamlit run app.py
 
 ## Deployment Note
 
-This project is ready for Streamlit Community Cloud. Use `app.py` as the app entry file. Keep `.streamlit/secrets.toml` local, and do not commit virtual environments, cache folders, or generated log files.
+This project is ready for Streamlit-based hosting platforms including Streamlit Community Cloud and Hugging Face Spaces.
+
+- App entry file: `app.py`
+- Spaces SDK: `streamlit`
+- Keep `.streamlit/secrets.toml` local
+- Do not commit virtual environments, cache folders, or generated log files
+- Do not add a custom Streamlit server port when deploying to Hugging Face Spaces
 
 Recommended GitHub repo name:
 
