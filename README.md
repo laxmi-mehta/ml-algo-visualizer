@@ -4,7 +4,7 @@ emoji: 📈
 colorFrom: blue
 colorTo: indigo
 sdk: docker
-short_description: Interactive Machine Learning Visualizer built with Streamlit and Scikit-learn for ML learning, dashboards, and algorithm intuition.
+short_description: Interactive ML algorithm visualizer with Streamlit.
 tags:
   - streamlit
   - machine-learning
