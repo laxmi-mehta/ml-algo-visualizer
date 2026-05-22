@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import streamlit as st
 
-from app.config.app_config import APP_DESCRIPTION, APP_TITLE
+from app.config.app_config import APP_AUTHOR, APP_DESCRIPTION, APP_TITLE, GITHUB_URL, HUGGING_FACE_URL
 from app.core.registry import get_algorithms_grouped_by_category
-from app.ui.components import render_glass_card, render_hero, render_info_card, render_section_title
+from app.ui.components import render_badge_links, render_footer, render_glass_card, render_hero, render_info_card, render_section_title
 
 
 def render_about_page() -> None:
@@ -13,21 +13,27 @@ def render_about_page() -> None:
 
     render_hero(
         "About This Project",
-        "Why this app exists, how it is structured, and what makes it a portfolio-grade ML learning product.",
-        note="Built in Streamlit with a modular registry-driven architecture and a strong focus on practical understanding.",
-        pills=[APP_TITLE, f"{algorithm_count} visualizers", "Streamlit Community Cloud ready"],
+        "Why this Streamlit ML App exists, how it is structured, and what makes it a portfolio-grade machine learning visualizer.",
+        note="Built in Streamlit with a modular registry-driven architecture, discoverable machine learning dashboard copy, and a strong focus on practical understanding.",
+        pills=[APP_TITLE, f"{algorithm_count} visualizers", "Interactive Machine Learning", "Scikit-learn Visualization"],
+    )
+    render_badge_links(
+        [
+            ("GitHub Repository", GITHUB_URL),
+            ("Hugging Face Space", HUGGING_FACE_URL),
+        ]
     )
 
     intro_col1, intro_col2 = st.columns([1.25, 1.0], gap="large")
     with intro_col1:
         render_info_card(
             "Project mission",
-            f"{APP_DESCRIPTION} The goal is to help learners move from memorizing algorithm names to actually seeing how parameters, data shape, and model assumptions affect behavior.",
+            f"{APP_DESCRIPTION} The goal is to help learners move from memorizing algorithm names to actually seeing how parameters, data shape, and model assumptions affect behavior in an interactive machine learning environment.",
         )
     with intro_col2:
         render_glass_card(
             "Who this is for",
-            "Beginners learning ML intuition, backend developers building ML breadth, and interview preparation where explainability matters.",
+            "Beginners learning ML intuition, recruiters reviewing a Python ML project, backend developers building ML breadth, and interview preparation where explainability matters.",
             eyebrow="Audience",
         )
 
@@ -72,4 +78,5 @@ def render_about_page() -> None:
     with dep_col1:
         render_info_card("Recommended host", "Streamlit Community Cloud is the best fit for this architecture because it is free-friendly and requires minimal setup.")
     with dep_col2:
-        render_info_card("Future direction", "If a richer frontend stack is needed later, the current product design and algorithm contracts can guide a future migration.")
+        render_info_card("Production-ready share path", "The same codebase is prepared for GitHub and Hugging Face Spaces so the project is easier to discover, review, and demo publicly.")
+    render_footer(APP_AUTHOR, GITHUB_URL, HUGGING_FACE_URL)

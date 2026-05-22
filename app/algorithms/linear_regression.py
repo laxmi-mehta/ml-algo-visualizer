@@ -45,6 +45,7 @@ LINEAR_REGRESSION_PARAMETERS = [
 ]
 
 
+@st.cache_data(show_spinner=False)
 def _load_sample_dataframe() -> tuple[pd.DataFrame, str]:
     dataset = load_diabetes(as_frame=True)
     data = dataset.frame.copy()
@@ -52,6 +53,7 @@ def _load_sample_dataframe() -> tuple[pd.DataFrame, str]:
     return data, "progression_score"
 
 
+@st.cache_data(show_spinner=False)
 def _load_synthetic_dataframe(noise: float) -> tuple[pd.DataFrame, str]:
     features, target = make_regression(
         n_samples=180,

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import OrderedDict
+from functools import lru_cache
 
 from app.algorithms.decision_tree import DECISION_TREE_CONFIG
 from app.algorithms.dbscan import DBSCAN_CONFIG
@@ -38,7 +39,8 @@ def get_all_algorithms() -> list[AlgorithmConfig]:
     return ALGORITHM_REGISTRY
 
 
-def search_algorithms(query: str = "", category: str | None = None) -> list[AlgorithmConfig]:
+@lru_cache(maxsize=64)
+def _search_algorithms_cached(query: str = "", category: str | None = None) -> tuple[AlgorithmConfig, ...]:
     normalized_query = query.strip().lower()
     results: list[AlgorithmConfig] = []
 
@@ -63,7 +65,11 @@ def search_algorithms(query: str = "", category: str | None = None) -> list[Algo
 
         results.append(algorithm)
 
-    return results
+    return tuple(results)
+
+
+def search_algorithms(query: str = "", category: str | None = None) -> list[AlgorithmConfig]:
+    return list(_search_algorithms_cached(query, category))
 
 
 def get_algorithm_by_name(name: str) -> AlgorithmConfig:
@@ -73,12 +79,22 @@ def get_algorithm_by_name(name: str) -> AlgorithmConfig:
     raise KeyError(f"Unknown algorithm: {name}")
 
 
-def get_algorithms_grouped_by_category() -> OrderedDict[str, list[AlgorithmConfig]]:
+@lru_cache(maxsize=1)
+def _grouped_algorithms_cached() -> tuple[tuple[str, tuple[AlgorithmConfig, ...]], ...]:
     grouped: OrderedDict[str, list[AlgorithmConfig]] = OrderedDict()
     for algorithm in ALGORITHM_REGISTRY:
         grouped.setdefault(algorithm.category, []).append(algorithm)
-    return grouped
+    return tuple((category, tuple(algorithms)) for category, algorithms in grouped.items())
+
+
+def get_algorithms_grouped_by_category() -> OrderedDict[str, list[AlgorithmConfig]]:
+    return OrderedDict((category, list(algorithms)) for category, algorithms in _grouped_algorithms_cached())
+
+
+@lru_cache(maxsize=1)
+def _featured_algorithms_cached() -> tuple[AlgorithmConfig, ...]:
+    return tuple(algorithm for algorithm in ALGORITHM_REGISTRY if algorithm.featured)
 
 
 def get_featured_algorithms() -> list[AlgorithmConfig]:
-    return [algorithm for algorithm in ALGORITHM_REGISTRY if algorithm.featured]
+    return list(_featured_algorithms_cached())

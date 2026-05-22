@@ -8,7 +8,7 @@ from app.core.registry import get_algorithms_grouped_by_category, search_algorit
 
 def render_sidebar() -> tuple[str, str | None]:
     st.sidebar.title(APP_TITLE)
-    st.sidebar.caption("Interactive ML learning studio")
+    st.sidebar.caption("Interactive Machine Learning Visualizer built with Streamlit and Scikit-learn.")
 
     mode = st.sidebar.radio(
         "Navigate",
@@ -24,7 +24,7 @@ def render_sidebar() -> tuple[str, str | None]:
     grouped = get_algorithms_grouped_by_category()
     quick_search = st.sidebar.text_input(
         "Quick search",
-        placeholder="Search by algorithm, topic, or use case",
+        placeholder="Search ML algorithms, dashboards, or learning topics",
     )
 
     if quick_search.strip():
@@ -51,5 +51,5 @@ def render_sidebar() -> tuple[str, str | None]:
     selected_name = st.sidebar.selectbox("Algorithm", options=algorithm_names)
 
     st.sidebar.markdown("---")
-    st.sidebar.caption("Every page follows the same learning flow: controls, visualization, explanation, and intuition.")
+    st.sidebar.caption("Explore machine learning visualizations, parameter intuition, and scikit-learn behavior in one ML learning platform.")
     return "algorithm", selected_name

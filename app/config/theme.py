@@ -1,17 +1,21 @@
+import json
+
 import streamlit as st
 import streamlit.components.v1 as components
 
-from app.config.app_config import APP_TITLE
+from app.config.app_config import (
+    APP_AUTHOR,
+    APP_CATEGORY,
+    APP_TITLE,
+    GITHUB_URL,
+    HUGGING_FACE_URL,
+    PROJECT_CANONICAL_NAME,
+    SEO_DESCRIPTION,
+    SEO_KEYWORDS,
+)
 
 
 def apply_theme() -> None:
-    st.set_page_config(
-        page_title=APP_TITLE,
-        page_icon="📈",
-        layout="wide",
-        initial_sidebar_state="expanded",
-    )
-
     st.markdown(
         """
         <style>
@@ -51,6 +55,8 @@ def apply_theme() -> None:
             }
             .block-container {
                 padding-top: 1.25rem;
+                padding-bottom: 3rem;
+                max-width: 1180px;
             }
             [data-testid="stSidebar"] {
                 background: linear-gradient(180deg, rgba(13, 20, 32, 0.98) 0%, rgba(10, 16, 26, 0.98) 100%);
@@ -149,6 +155,56 @@ def apply_theme() -> None:
             .stMarkdown, .stText, p, li, label {
                 color: var(--text-main);
             }
+            .section-shell {
+                margin-top: 0.5rem;
+                margin-bottom: 1rem;
+            }
+            .badge-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                margin: 0.75rem 0 0.25rem;
+            }
+            .badge-link {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.4rem;
+                padding: 0.45rem 0.8rem;
+                border-radius: 999px;
+                text-decoration: none;
+                background: rgba(255,255,255,0.08);
+                color: var(--text-main) !important;
+                border: 1px solid rgba(255,255,255,0.12);
+                font-size: 0.85rem;
+            }
+            .footer-card {
+                margin-top: 2rem;
+                padding: 1rem 1.1rem;
+                border-radius: var(--radius-lg);
+                background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.03) 100%);
+                border: 1px solid rgba(255,255,255,0.12);
+                color: var(--text-main);
+            }
+            .footer-card a {
+                color: #b9ecff !important;
+                text-decoration: none;
+            }
+            .hero-title {
+                letter-spacing: -0.03em;
+            }
+            @media (max-width: 900px) {
+                .block-container {
+                    padding-top: 1rem;
+                    padding-left: 1rem;
+                    padding-right: 1rem;
+                }
+                .hero-card,
+                .glass-card,
+                .section-card,
+                .spotlight-card {
+                    padding: 1rem;
+                }
+            }
             @media (pointer: fine) {
                 html.cursor-fx-ready,
                 html.cursor-fx-ready body,
@@ -215,11 +271,27 @@ def apply_theme() -> None:
         """,
         unsafe_allow_html=True,
     )
-    components.html(
-        """
+    metadata_script = """
         <script>
+        const ensureMetaTag = (selector, attribute, value) => {
+          const parentDoc = window.parent.document;
+          let node = parentDoc.querySelector(selector);
+          if (!node) {
+            node = parentDoc.createElement('meta');
+            node.setAttribute(
+              attribute,
+              selector.includes('property=')
+                ? selector.match(/property="([^"]+)"/)[1]
+                : selector.match(/name="([^"]+)"/)[1]
+            );
+            parentDoc.head.appendChild(node);
+          }
+          node.setAttribute('content', value);
+        };
+
         const hideChrome = () => {
           const parentDoc = window.parent.document;
+          parentDoc.title = __APP_TITLE__;
           const selectors = [
             '[data-testid="stHeader"]',
             '[data-testid="stToolbar"]',
@@ -252,10 +324,36 @@ def apply_theme() -> None:
           });
         };
 
+        ensureMetaTag('meta[name="description"]', 'name', __SEO_DESCRIPTION__);
+        ensureMetaTag('meta[name="keywords"]', 'name', __SEO_KEYWORDS__);
+        ensureMetaTag('meta[name="author"]', 'name', __APP_AUTHOR__);
+        ensureMetaTag('meta[property="og:title"]', 'property', __CANONICAL_NAME__);
+        ensureMetaTag('meta[property="og:description"]', 'property', __SEO_DESCRIPTION__);
+        ensureMetaTag('meta[property="og:url"]', 'property', __HUGGING_FACE_URL__);
+        ensureMetaTag('meta[property="og:type"]', 'property', 'website');
+        ensureMetaTag('meta[name="twitter:card"]', 'name', 'summary_large_image');
+        ensureMetaTag('meta[name="twitter:title"]', 'name', __CANONICAL_NAME__);
+        ensureMetaTag('meta[name="twitter:description"]', 'name', __SEO_DESCRIPTION__);
+
+        const parentDoc = window.parent.document;
+        let canonical = parentDoc.querySelector('link[rel="canonical"]');
+        if (!canonical) {
+          canonical = parentDoc.createElement('link');
+          canonical.setAttribute('rel', 'canonical');
+          parentDoc.head.appendChild(canonical);
+        }
+        canonical.setAttribute('href', __HUGGING_FACE_URL__);
+
         hideChrome();
         setInterval(hideChrome, 800);
         </script>
-        """,
-        height=0,
-        width=0,
+    """
+    metadata_script = (
+        metadata_script.replace("__APP_TITLE__", json.dumps(f"{APP_TITLE} | Interactive Machine Learning Visualizer"))
+        .replace("__SEO_DESCRIPTION__", json.dumps(SEO_DESCRIPTION))
+        .replace("__SEO_KEYWORDS__", json.dumps(", ".join(SEO_KEYWORDS)))
+        .replace("__APP_AUTHOR__", json.dumps(APP_AUTHOR))
+        .replace("__CANONICAL_NAME__", json.dumps(PROJECT_CANONICAL_NAME))
+        .replace("__HUGGING_FACE_URL__", json.dumps(HUGGING_FACE_URL))
     )
+    components.html(metadata_script, height=0, width=0)

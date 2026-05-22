@@ -16,8 +16,8 @@ def render_algorithm_page(config: AlgorithmConfig) -> None:
         pills.append(config.maturity)
     render_hero(
         config.name,
-        f"{config.problem_type} • {config.category}",
-        note="Tweak the controls, run the visualizer, and connect the output back to practical ML intuition.",
+        f"{config.problem_type} | {config.category}",
+        note="Tweak the controls, run the visualizer, and connect the output back to practical ML intuition through interactive machine learning and scikit-learn visualization.",
         pills=pills,
     )
     render_section_title("Overview")

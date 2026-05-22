@@ -1,68 +1,127 @@
 ---
-title: ML Algo Visualizer
+title: ML Algorithm Visualizer
 emoji: 📈
 colorFrom: blue
 colorTo: indigo
 sdk: docker
+short_description: Interactive Machine Learning Visualizer built with Streamlit and Scikit-learn for ML learning, dashboards, and algorithm intuition.
+tags:
+  - streamlit
+  - machine-learning
+  - scikit-learn
+  - data-visualization
+  - education
 pinned: false
 ---
 
-# ML Algo Visualizer
+# ML Algorithm Visualizer
 
-ML Algo Visualizer is an interactive Streamlit project that helps learners understand machine learning algorithms through parameter controls, visual feedback, metrics, and plain-English explanations.
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-ML%20App-ff4b4b.svg)](https://streamlit.io/)
+[![Scikit-learn](https://img.shields.io/badge/Scikit--learn-Visualization-f7931e.svg)](https://scikit-learn.org/)
+[![Hugging Face Space](https://img.shields.io/badge/Hugging%20Face-Live%20Demo-yellow.svg)](https://laxmimehta-ml-algo-visualizer.hf.space/)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-181717.svg)](https://github.com/laxmi-mehta/ml-algo-visualizer)
 
-## Overview
+> An interactive machine learning visualizer and Streamlit ML App for intuition, experimentation, and learning with Scikit-learn.
 
-This project turns common machine learning algorithms into a guided visual learning experience. Instead of jumping between notebooks, slides, and scattered notes, users can explore one polished app that connects controls, plots, interpretation, and model behavior in the same workflow.
+## Live Demo
+
+- Hugging Face Live App: [ML Algorithm Visualizer](https://laxmimehta-ml-algo-visualizer.hf.space/)
+- GitHub Repository: [ml-algo-visualizer](https://github.com/laxmi-mehta/ml-algo-visualizer)
+
+## Why This Project Matters
+
+ML Algorithm Visualizer is a **Machine Learning Visualizer**, **Interactive Machine Learning** dashboard, and **Python ML Project** designed for learners, recruiters, and portfolio reviewers. It turns classical machine learning concepts into a clean **Streamlit ML App** with interactive controls, clear visual outputs, and beginner-friendly explanations.
+
+Instead of reading static notes or isolated notebooks, users can explore an **ML Learning Platform** that combines:
+
+- machine learning dashboards
+- scikit-learn visualization
+- parameter experimentation
+- data science visualization
+- guided interpretation for ML intuition
+
+## Screenshots
+
+Add screenshots or demo GIFs here before sharing widely:
+
+- `assets/screenshots/homepage.png`
+- `assets/screenshots/algorithm-view.png`
+- `assets/screenshots/concept-visualizer.png`
 
 ## Features
 
-- Interactive Streamlit interface with a single `app.py` entrypoint
-- Search and filter experience for quickly discovering algorithms by topic or use case
-- Supervised learning demos including Linear Regression, Logistic Regression, KNN, Decision Tree, Random Forest, SVM, and Naive Bayes
-- Unsupervised learning demos including K-Means, DBSCAN, and PCA
-- Concept visualizers for Gradient Descent, Regularization, and Overfitting vs Underfitting
-- Suggested learning paths for beginners, interview preparation, and concept-first learning
-- Beginner-friendly explanations, interpretation notes, and common mistakes on each page
-- Deployment-ready structure for GitHub, Streamlit Community Cloud, and Hugging Face Spaces
+- Interactive **Machine Learning Dashboard** built with Streamlit
+- Searchable algorithm library for faster discovery
+- **Scikit-learn Visualization** demos for supervised and unsupervised learning
+- Concept pages for optimization, regularization, and generalization
+- Reusable UI components and modular architecture
+- Hugging Face Spaces and Streamlit deployment support
+- Portfolio-friendly structure with clear educational framing
+
+## Algorithms Covered
+
+### Supervised Learning
+
+- Linear Regression
+- Logistic Regression
+- K-Nearest Neighbors
+- Decision Tree
+- Random Forest
+- Support Vector Machine
+- Naive Bayes
+
+### Unsupervised Learning
+
+- K-Means
+- DBSCAN
+- PCA
+
+### Concept Visualizers
+
+- Gradient Descent Visualizer
+- Regularization Demo
+- Overfitting vs Underfitting
+
+## What You Can Learn
+
+- how model parameters change decision boundaries
+- how clustering algorithms behave under noise
+- how PCA compresses information
+- how regularization changes flexible models
+- how optimization behaves under different learning rates
+- how to package an **Interactive ML Project** professionally
 
 ## Tech Stack
 
 - Python
 - Streamlit
+- Scikit-learn
 - NumPy
 - Pandas
 - Plotly
-- scikit-learn
-
-## Why This Project Is Useful
-
-- It helps beginners build intuition instead of memorizing algorithm names.
-- It gives portfolio reviewers a live product to explore instead of a static notebook.
-- It demonstrates both machine learning understanding and application-level product thinking.
-- It is organized so new visualizers can be added without rewriting the whole app.
 
 ## Project Structure
 
 ```text
 app.py
 app/
-  algorithms/    # algorithm and concept visualizers
-  config/        # app-level settings and theme
-  core/          # models, navigation, registry
-  pages/         # home, about, algorithm pages
-  ui/            # reusable UI helpers
+  algorithms/        # ML algorithms and concept visualizers
+  config/            # Branding, theme, metadata
+  core/              # Registry, navigation, shared models
+  pages/             # Home, about, algorithm pages
+  ui/                # Reusable cards, footer, layout helpers
 assets/
-  screenshots/   # demo images and GIF placeholders
+  screenshots/       # README screenshots and demo assets
+.streamlit/
+  config.toml        # Streamlit configuration
+Dockerfile           # Hugging Face Spaces deployment
+requirements.txt     # Runtime dependencies
 ```
 
-## Setup Instructions
+## Installation
 
-1. Create a virtual environment.
-2. Activate it.
-3. Install the dependencies from `requirements.txt`.
-
-Windows PowerShell:
+### Windows PowerShell
 
 ```powershell
 python -m venv .venv
@@ -70,7 +129,7 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-macOS or Linux:
+### macOS or Linux
 
 ```bash
 python -m venv .venv
@@ -90,30 +149,60 @@ If `streamlit` is not on your PATH:
 python -m streamlit run app.py
 ```
 
-## Deployment Note
+## Deployment Guide
 
-This project is ready for Streamlit-based hosting platforms including Streamlit Community Cloud and Hugging Face Spaces.
+### Streamlit Community Cloud
 
-- App entry file: `app.py`
-- Spaces SDK: `docker`
-- Keep `.streamlit/secrets.toml` local
-- Do not commit virtual environments, cache folders, or generated log files
-- Hugging Face Spaces uses the included `Dockerfile` to start the Streamlit app on the correct host and port
+1. Push this repository to GitHub.
+2. Create a new Streamlit app.
+3. Select `app.py` as the entry file.
+4. Deploy without adding custom server port settings.
 
-Recommended GitHub repo name:
+### Hugging Face Spaces
 
-- `ml-algo-visualizer`
+1. Create a new Space.
+2. Select `Docker` as the SDK.
+3. Push this repository to the Space remote.
+4. Hugging Face will build the included `Dockerfile` automatically.
 
-## Screenshot Placeholder
+## SEO and Discoverability Focus
 
-Add a project screenshot or short demo GIF here before publishing:
+This project is intentionally written and structured so it can surface better for searches like:
 
-```text
-assets/screenshots/project-homepage.png
-```
+- ML Algorithm Visualizer
+- Machine Learning Visualizer
+- Streamlit Machine Learning App
+- Interactive ML Project
+- Scikit-learn Visualizer
 
-## Portfolio Pitch
+The homepage, metadata, README, and deployment descriptions are aligned to support stronger discoverability across Google, GitHub, Hugging Face, and LinkedIn previews.
 
-If you are describing this project on GitHub, LinkedIn, or in interviews, you can say:
+## Future Improvements
 
-> ML Algo Visualizer is a teaching-first Streamlit application that visualizes classical machine learning algorithms and learning concepts through interactive controls, plots, metrics, and beginner-friendly explanations.
+- dataset upload support for selected pages
+- side-by-side model comparison workflows
+- more evaluation metrics and error analysis
+- downloadable screenshots and reports
+- richer educational walkthroughs per algorithm
+
+## Contribution Guide
+
+Contributions are welcome.
+
+If you want to improve the app:
+
+1. Fork the repository
+2. Create a feature branch
+3. Make changes with clear commit messages
+4. Open a pull request with a concise explanation
+
+## Author
+
+**Laxmi Mehta**
+
+- GitHub: [laxmi-mehta](https://github.com/laxmi-mehta/ml-algo-visualizer)
+- Hugging Face Live App: [ML Algorithm Visualizer](https://laxmimehta-ml-algo-visualizer.hf.space/)
+
+## LinkedIn-Ready Project Summary
+
+ML Algorithm Visualizer is an interactive machine learning visualizer built with Streamlit and Scikit-learn. It helps users understand classification, clustering, dimensionality reduction, optimization, and regularization through real-time controls, plots, metrics, and beginner-friendly explanations.

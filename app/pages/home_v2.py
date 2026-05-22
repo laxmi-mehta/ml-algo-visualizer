@@ -2,10 +2,27 @@ from __future__ import annotations
 
 import streamlit as st
 
-from app.config.app_config import APP_DESCRIPTION, APP_HERO_NOTE, APP_TAGLINE, APP_TITLE
+from app.config.app_config import (
+    APP_AUTHOR,
+    APP_DESCRIPTION,
+    APP_HERO_NOTE,
+    APP_SUBTITLE,
+    APP_TAGLINE,
+    APP_TITLE,
+    GITHUB_URL,
+    HUGGING_FACE_URL,
+)
 from app.core.models import AlgorithmConfig
 from app.core.registry import get_algorithms_grouped_by_category, get_featured_algorithms, search_algorithms
-from app.ui.components import render_glass_card, render_hero, render_info_card, render_section_title, render_spotlight_card
+from app.ui.components import (
+    render_badge_links,
+    render_footer,
+    render_glass_card,
+    render_hero,
+    render_info_card,
+    render_section_title,
+    render_spotlight_card,
+)
 
 
 LEARNING_PATHS = [
@@ -21,6 +38,18 @@ LEARNING_PATHS = [
         "Concept-first learning",
         "Start with gradient descent, regularization, and overfitting so model behavior makes more sense later.",
     ),
+]
+
+BENEFITS = [
+    "Compare supervised learning, unsupervised learning, and concept visualizers in one machine learning dashboard.",
+    "Study how parameter changes affect accuracy, decision boundaries, clustering, and variance retention.",
+    "Use it as a Python ML project for interviews, portfolio review, or beginner-friendly scikit-learn visualization practice.",
+]
+
+OBJECTIVES = [
+    "Build intuition for model behavior instead of memorizing formulas.",
+    "Understand what changing hyperparameters does visually and numerically.",
+    "Learn how an interactive machine learning experience can be packaged as a production-ready Streamlit ML App.",
 ]
 
 
@@ -43,27 +72,49 @@ def render_home_page() -> None:
 
     render_hero(
         APP_TITLE,
-        APP_TAGLINE,
+        f"{APP_TAGLINE} {APP_SUBTITLE}",
         note=f"{APP_DESCRIPTION} {APP_HERO_NOTE}",
         pills=[
-            f"{algorithm_count} visualizers",
-            "Interactive controls",
-            "Beginner-friendly explanations",
-            "Portfolio-ready structure",
+            "Machine Learning Visualizer",
+            "Streamlit ML App",
+            "Scikit-learn Visualization",
+            f"{algorithm_count} interactive demos",
         ],
+    )
+    render_badge_links(
+        [
+            ("GitHub Repository", GITHUB_URL),
+            ("Hugging Face Space", HUGGING_FACE_URL),
+        ]
     )
 
     hero_col1, hero_col2 = st.columns([1.4, 1.0], gap="large")
     with hero_col1:
         render_spotlight_card(
-            "Why this app stands out",
-            "It is designed like a learning studio instead of a notebook dump. Every page connects controls, visuals, interpretation, and mistakes in one consistent experience.",
+            "Interactive Machine Learning Visualizer",
+            "This Machine Learning Visualizer is designed like a focused ML learning platform instead of a notebook dump. Every page connects controls, plots, interpretation, and common mistakes in one consistent workflow.",
         )
     with hero_col2:
         stat_col1, stat_col2, stat_col3 = st.columns(3)
         stat_col1.metric("Algorithms", str(algorithm_count))
         stat_col2.metric("Categories", str(len(grouped)))
         stat_col3.metric("Featured demos", str(len(featured)))
+
+    render_section_title(
+        "Project Overview",
+        "ML Algorithm Visualizer is a Streamlit ML App for interactive machine learning, scikit-learn visualization, and data science visualization.",
+    )
+    overview_col1, overview_col2 = st.columns([1.25, 1.0], gap="large")
+    with overview_col1:
+        render_info_card(
+            "What this project does",
+            "It helps learners explore classification, clustering, dimensionality reduction, optimization, and regularization through interactive machine learning visualizations built with Python, Streamlit, and Scikit-learn.",
+        )
+    with overview_col2:
+        render_info_card(
+            "Who it is for",
+            "This Python ML project is useful for students, recruiters reviewing practical work, data science beginners, and engineers who want a clean machine learning dashboard for intuition building.",
+        )
 
     render_section_title("Quick Discovery", "Search the full library by algorithm name, task type, or learning goal.")
     filter_col1, filter_col2 = st.columns([1.5, 1.0], gap="large")
@@ -129,6 +180,18 @@ def render_home_page() -> None:
                 eyebrow=algorithm.short_badge or algorithm.category,
             )
 
+    render_section_title("Why Interactive Visualization Helps", "Interactive machine learning makes algorithm behavior easier to explain, learn, and review.")
+    benefit_cols = st.columns(3)
+    for column, benefit in zip(benefit_cols, BENEFITS):
+        with column:
+            render_info_card("Visualization benefit", benefit)
+
+    render_section_title("Learning Objectives", "The app is designed to function as both a machine learning visualizer and a practical ML learning platform.")
+    objective_cols = st.columns(3)
+    for column, objective in zip(objective_cols, OBJECTIVES):
+        with column:
+            render_info_card("Learning outcome", objective)
+
     render_section_title("Full Library Snapshot", "The current release balances classical ML coverage with concept-first explainers.")
     for category, algorithms in grouped.items():
         with st.expander(f"{category} - {len(algorithms)} visualizers", expanded=category == "Concept Visualizers"):
@@ -138,10 +201,11 @@ def render_home_page() -> None:
     st.markdown(
         """
         <div class="glass-card">
-            <div class="roadmap-line"><strong>Product angle:</strong> a teaching-first ML app built as a reusable, modular learning studio.</div>
-            <div class="roadmap-line"><strong>Engineering angle:</strong> registry-driven architecture, shared page shell, reusable UI blocks, and deployment-ready Streamlit packaging.</div>
-            <div class="roadmap-line"><strong>Learning angle:</strong> every visualizer combines controls, plots, metrics, explanation, and common mistakes in one place.</div>
+            <div class="roadmap-line"><strong>Product angle:</strong> a teaching-first machine learning dashboard built as a reusable, discoverable Streamlit ML App.</div>
+            <div class="roadmap-line"><strong>Engineering angle:</strong> registry-driven architecture, shared page shell, reusable UI blocks, and deployment-ready packaging for GitHub and Hugging Face.</div>
+            <div class="roadmap-line"><strong>Learning angle:</strong> every ML Algorithm Visualizer module combines controls, plots, metrics, explanation, and common mistakes in one place.</div>
         </div>
         """,
         unsafe_allow_html=True,
     )
+    render_footer(APP_AUTHOR, GITHUB_URL, HUGGING_FACE_URL)

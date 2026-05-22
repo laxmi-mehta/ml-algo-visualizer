@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import streamlit as st
 
+from app.config.app_config import APP_DESCRIPTION, APP_TITLE, APP_TAGLINE
 from app.config.theme import apply_theme
 from app.core.navigation import render_sidebar
 from app.core.registry import get_algorithm_by_name
@@ -12,6 +13,15 @@ from app.pages.home_v2 import render_home_page
 
 def main() -> None:
     try:
+        st.set_page_config(
+            page_title=f"{APP_TITLE} | Interactive Machine Learning Visualizer",
+            page_icon="📈",
+            layout="wide",
+            initial_sidebar_state="expanded",
+            menu_items={
+                "About": f"{APP_TITLE}: {APP_TAGLINE} {APP_DESCRIPTION}",
+            },
+        )
         apply_theme()
         page_type, selected_algorithm = render_sidebar()
 

@@ -123,6 +123,7 @@ def build_confusion_matrix_figure(matrix: np.ndarray, class_names: list[str]) ->
     return figure
 
 
+@st.cache_data(show_spinner=False)
 def _load_binary_classification_dataset(dataset_choice: str, class_sep: float, noise: float) -> ClassifierDataset:
     if dataset_choice == "Sample: Breast Cancer (2 features)":
         dataset = load_breast_cancer(as_frame=True)
@@ -313,6 +314,7 @@ def _cluster_figure(points: np.ndarray, labels: np.ndarray, centers: np.ndarray 
     return figure
 
 
+@st.cache_data(show_spinner=False)
 def _load_cluster_dataset(dataset_choice: str, noise: float) -> np.ndarray:
     if dataset_choice == "Synthetic: Moons":
         features, _ = make_moons(n_samples=280, noise=max(noise, 0.03), random_state=42)
@@ -324,6 +326,18 @@ def _load_cluster_dataset(dataset_choice: str, noise: float) -> np.ndarray:
         random_state=42,
     )
     return features
+
+
+@st.cache_data(show_spinner=False)
+def _load_pca_dataset(dataset_choice: str) -> tuple[pd.DataFrame, list[str], np.ndarray, list[str]]:
+    dataset_loader = load_iris if dataset_choice == "Sample: Iris" else load_wine
+    dataset = dataset_loader(as_frame=True)
+    frame = dataset.frame.copy()
+    feature_names = dataset.feature_names
+    X = frame[feature_names].to_numpy()
+    y = dataset.target.to_numpy()
+    class_names = [str(name) for name in dataset.target_names]
+    return frame, feature_names, y, class_names
 
 
 def render_kmeans_page(config: AlgorithmConfig) -> None:
@@ -534,13 +548,8 @@ def render_pca_page(config: AlgorithmConfig) -> None:
         )
         return
 
-    dataset_loader = load_iris if dataset_choice == "Sample: Iris" else load_wine
-    dataset = dataset_loader(as_frame=True)
-    frame = dataset.frame.copy()
-    feature_names = dataset.feature_names
+    frame, feature_names, y, class_names = _load_pca_dataset(dataset_choice)
     X = frame[feature_names].to_numpy()
-    y = dataset.target.to_numpy()
-    class_names = [str(name) for name in dataset.target_names]
 
     if bool(params["standardize"]):
         X = StandardScaler().fit_transform(X)
