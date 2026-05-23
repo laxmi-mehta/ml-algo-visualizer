@@ -192,6 +192,103 @@ def apply_theme() -> None:
             .hero-title {
                 letter-spacing: -0.03em;
             }
+            /* Always keep sidebar toggle visible — never hide it */
+            [data-testid="collapsedControl"],
+            [data-testid="stSidebarCollapsedControl"] {
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+            /* Mobile navigation hint — hidden on desktop */
+            .mobile-nav-hint {
+                display: none;
+            }
+            @media (max-width: 768px) {
+                /* Prominent sidebar toggle button */
+                [data-testid="collapsedControl"] {
+                    position: fixed !important;
+                    top: 0.55rem !important;
+                    left: 0.55rem !important;
+                    z-index: 999999 !important;
+                    background: rgba(76, 201, 240, 0.18) !important;
+                    border: 1.5px solid rgba(76, 201, 240, 0.50) !important;
+                    border-radius: 12px !important;
+                    width: 48px !important;
+                    height: 48px !important;
+                    min-width: 48px !important;
+                    min-height: 48px !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    backdrop-filter: blur(8px) !important;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.32), 0 0 0 1px rgba(76,201,240,0.18) !important;
+                }
+                [data-testid="collapsedControl"] svg {
+                    fill: #4cc9f0 !important;
+                    width: 22px !important;
+                    height: 22px !important;
+                }
+                [data-testid="collapsedControl"] button {
+                    background: transparent !important;
+                    border: none !important;
+                    color: #4cc9f0 !important;
+                    width: 100% !important;
+                    height: 100% !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                }
+                /* Stack multi-column layouts vertically on mobile */
+                [data-testid="stHorizontalBlock"] {
+                    flex-wrap: wrap !important;
+                    gap: 0.5rem !important;
+                }
+                [data-testid="stColumn"],
+                [data-testid="column"] {
+                    min-width: 100% !important;
+                    width: 100% !important;
+                    flex: 1 1 100% !important;
+                }
+                /* Content padding — leave room at top for fixed toggle */
+                .block-container {
+                    padding-top: 3.5rem !important;
+                    padding-left: 0.75rem !important;
+                    padding-right: 0.75rem !important;
+                    max-width: 100vw !important;
+                }
+                /* Card sizing */
+                .hero-card,
+                .glass-card,
+                .section-card,
+                .spotlight-card,
+                .metric-card,
+                .feature-grid-card {
+                    padding: 1rem !important;
+                    width: 100% !important;
+                    box-sizing: border-box !important;
+                    margin-bottom: 0.75rem !important;
+                }
+                /* Hero title readable on small screens */
+                .hero-title {
+                    font-size: 1.55rem !important;
+                    line-height: 1.3 !important;
+                }
+                /* Sidebar fills screen width when open on mobile */
+                [data-testid="stSidebar"] {
+                    min-width: 280px !important;
+                    max-width: 88vw !important;
+                }
+                /* Show mobile nav hint */
+                .mobile-nav-hint {
+                    display: block !important;
+                    background: rgba(76, 201, 240, 0.10);
+                    border: 1px solid rgba(76, 201, 240, 0.28);
+                    border-radius: 10px;
+                    padding: 0.55rem 0.9rem 0.55rem 3.5rem;
+                    margin-bottom: 1rem;
+                    font-size: 0.85rem;
+                    color: rgba(247,247,245,0.80);
+                }
+            }
             @media (max-width: 900px) {
                 .block-container {
                     padding-top: 1rem;
