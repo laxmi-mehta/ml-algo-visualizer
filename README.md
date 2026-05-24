@@ -1,3 +1,12 @@
+---
+title: ML Algorithm Visualizer
+emoji: 📈
+colorFrom: blue
+colorTo: cyan
+sdk: docker
+pinned: false
+---
+
 # ML Algorithm Visualizer
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
