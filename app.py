@@ -17,7 +17,7 @@ def main() -> None:
             page_title=f"{APP_TITLE} | Interactive Machine Learning Visualizer",
             page_icon="📈",
             layout="wide",
-            initial_sidebar_state="collapsed",
+            initial_sidebar_state="auto",
             menu_items={
                 "About": f"{APP_TITLE}: {APP_TAGLINE} {APP_DESCRIPTION}",
             },
