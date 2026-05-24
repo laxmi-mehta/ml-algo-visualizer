@@ -16,6 +16,3 @@ streamlit.err.log
 streamlit.out.log
 *.log
 .streamlit/secrets.toml
-assets/screenshots/*.png
-assets/screenshots/*.jpg
-assets/screenshots/*.gif
