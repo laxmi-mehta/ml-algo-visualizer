@@ -585,6 +585,33 @@ def apply_theme() -> None:
 
         injectMobileCSS();
 
+        // Inject mobile bottom nav directly into parent document — bypasses React
+        const updateMobileNav = () => {
+          const parentDoc = window.parent.document;
+          const currentNav = new URLSearchParams(window.parent.location.search).get('nav') || 'Home';
+          let nav = parentDoc.getElementById('ml-mobile-nav');
+          if (!nav) {
+            nav = parentDoc.createElement('div');
+            nav.id = 'ml-mobile-nav';
+            nav.className = 'mobile-bottom-nav';
+            const items = [['🏠', 'Home'], ['⚡', 'Algorithms'], ['👤', 'About']];
+            nav.innerHTML = items.map(([icon, label]) =>
+              '<a data-nav="' + label + '" class="mob-nav-item">' +
+              '<span class="mob-nav-icon">' + icon + '</span><span>' + label + '</span></a>'
+            ).join('');
+            nav.querySelectorAll('[data-nav]').forEach(a => {
+              a.addEventListener('click', () => {
+                window.parent.location.href = '?nav=' + a.getAttribute('data-nav');
+              });
+            });
+            parentDoc.body.appendChild(nav);
+          }
+          nav.querySelectorAll('.mob-nav-item').forEach(el => {
+            el.classList.toggle('mob-nav-active', el.getAttribute('data-nav') === currentNav);
+          });
+        };
+        updateMobileNav();
+
         // On mobile: show collapsed-control only when sidebar is actually closed
         const syncSidebarBtn = () => {
           const parentDoc = window.parent.document;

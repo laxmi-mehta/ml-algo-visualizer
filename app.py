@@ -24,17 +24,6 @@ def main() -> None:
         )
         apply_theme()
 
-        # Mobile bottom nav bar — shown only on mobile via CSS
-        _current_nav = st.query_params.get("nav", "Home")
-        _nav_items = [("🏠", "Home"), ("⚡", "Algorithms"), ("👤", "About")]
-        _links = "".join(
-            f'<a href="javascript:void(0)" onclick="window.location.href=\'?nav={label}\'"'
-            f' class="mob-nav-item{"  mob-nav-active" if label == _current_nav else ""}">'
-            f'<span class="mob-nav-icon">{icon}</span><span>{label}</span></a>'
-            for icon, label in _nav_items
-        )
-        st.markdown(f'<div class="mobile-bottom-nav">{_links}</div>', unsafe_allow_html=True)
-
         page_type, selected_algorithm = render_sidebar()
 
         if page_type == "home":
