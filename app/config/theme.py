@@ -627,6 +627,26 @@ def apply_theme() -> None:
         };
         setInterval(syncSidebarBtn, 200);
 
+        // Auto-collapse sidebar on mobile after a nav option (radio) is selected
+        const setupSidebarAutoCollapse = () => {
+          const parentDoc = window.parent.document;
+          if (parentDoc.documentElement.clientWidth > 768) return;
+          const sidebar = parentDoc.querySelector('[data-testid="stSidebar"]');
+          if (!sidebar || sidebar._collapseSetup) return;
+          const radios = sidebar.querySelectorAll('input[type="radio"]');
+          if (!radios.length) return;
+          sidebar._collapseSetup = true;
+          radios.forEach(radio => {
+            radio.addEventListener('change', () => {
+              setTimeout(() => {
+                const btn = parentDoc.querySelector('[data-testid="stSidebarCollapseButton"]');
+                if (btn) btn.click();
+              }, 350);
+            });
+          });
+        };
+        setInterval(setupSidebarAutoCollapse, 500);
+
         hideChrome();
         setInterval(hideChrome, 800);
         </script>
