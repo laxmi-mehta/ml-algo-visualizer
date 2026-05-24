@@ -582,11 +582,50 @@ def apply_theme() -> None:
         };
         updateMobileNav();
 
-        // Custom hamburger button injected into body so parent display:none cannot hide it.
-        // stSidebarCollapsedControl lives inside stHeader which we hide via CSS — any child
-        // of a display:none element is invisible regardless of its own display property.
-        // By creating our own button in body and programmatically clicking the real Streamlit
-        // button, we bypass that constraint entirely.
+        // Direct CSS sidebar control — bypasses Streamlit's React event system entirely.
+        // On HF, sidebar always starts collapsed (no localStorage). Clicking Streamlit's
+        // internal button fails because it lives inside display:none stHeader. Instead we
+        // directly set/remove the sidebar's transform to show or hide it, and sync state
+        // via a backdrop overlay that closes it on outside click.
+        let mlForcedOpen = false;
+
+        const mlCloseSidebar = () => {
+          const pDoc = window.parent.document;
+          const sb = pDoc.querySelector('[data-testid="stSidebar"]');
+          if (sb) {
+            sb.style.removeProperty('transform');
+            sb.style.removeProperty('left');
+            sb.style.removeProperty('visibility');
+            sb.style.removeProperty('z-index');
+          }
+          const ov = pDoc.getElementById('ml-sb-overlay');
+          if (ov) ov.style.display = 'none';
+          mlForcedOpen = false;
+        };
+
+        const mlOpenSidebar = () => {
+          const pDoc = window.parent.document;
+          const sb = pDoc.querySelector('[data-testid="stSidebar"]');
+          if (!sb) return;
+          sb.style.setProperty('transform', 'translateX(0)', 'important');
+          sb.style.setProperty('left', '0', 'important');
+          sb.style.setProperty('visibility', 'visible', 'important');
+          sb.style.setProperty('z-index', '99999', 'important');
+          mlForcedOpen = true;
+          let ov = pDoc.getElementById('ml-sb-overlay');
+          if (!ov) {
+            ov = pDoc.createElement('div');
+            ov.id = 'ml-sb-overlay';
+            Object.assign(ov.style, {
+              position: 'fixed', top: '0', left: '0', right: '0', bottom: '0',
+              zIndex: '99997', background: 'rgba(0,0,0,0.45)',
+            });
+            ov.addEventListener('click', mlCloseSidebar);
+            pDoc.body.appendChild(ov);
+          }
+          ov.style.display = 'block';
+        };
+
         const ensureMobileHamburger = () => {
           const parentDoc = window.parent.document;
           let btn = parentDoc.getElementById('ml-hamburger');
@@ -608,21 +647,10 @@ def apply_theme() -> None:
               boxShadow: '0 4px 20px rgba(0,0,0,0.32)',
               WebkitTapHighlightColor: 'transparent',
             });
-            btn.addEventListener('click', () => {
-              // .click() is a no-op when the element's ancestor has display:none (no layout box).
-              // stSidebarCollapsedControl lives inside stHeader which we hide — so .click() silently
-              // fails on HF where the sidebar starts collapsed from a fresh Docker session.
-              // dispatchEvent bypasses the layout-box requirement and bubbles up to React's root.
-              const real = parentDoc.querySelector('[data-testid="stSidebarCollapsedControl"] button');
-              if (real) {
-                real.dispatchEvent(new window.parent.MouseEvent('click', {
-                  bubbles: true, cancelable: true, view: window.parent
-                }));
-              }
-            });
+            btn.addEventListener('click', mlOpenSidebar);
             parentDoc.body.appendChild(btn);
           }
-          // Show only when sidebar is closed
+          // Show hamburger only when sidebar is off-screen (collapsed)
           const sidebar = parentDoc.querySelector('[data-testid="stSidebar"]');
           if (!sidebar) { btn.style.display = 'flex'; return; }
           const rect = sidebar.getBoundingClientRect();
@@ -630,9 +658,7 @@ def apply_theme() -> None:
         };
         setInterval(ensureMobileHamburger, 200);
 
-        // Auto-collapse sidebar after a nav option (radio) is selected — works on all screen sizes.
-        // Uses event delegation on the sidebar container so it survives Streamlit re-renders.
-        // dataset.collapseSetup survives JS GC unlike a plain JS property.
+        // Close sidebar (remove CSS override) when a nav radio is clicked.
         const setupSidebarAutoCollapse = () => {
           const parentDoc = window.parent.document;
           const sidebar = parentDoc.querySelector('[data-testid="stSidebar"]');
@@ -641,10 +667,7 @@ def apply_theme() -> None:
           sidebar.dataset.collapseSetup = '1';
           sidebar.addEventListener('click', (e) => {
             if (!e.target.closest('[data-testid="stRadio"]')) return;
-            setTimeout(() => {
-              const btn = parentDoc.querySelector('[data-testid="stSidebarCollapseButton"]');
-              if (btn) btn.click();
-            }, 300);
+            setTimeout(mlCloseSidebar, 300);
           });
         };
         setInterval(setupSidebarAutoCollapse, 500);
