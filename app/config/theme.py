@@ -585,7 +585,9 @@ def apply_theme() -> None:
 
         injectMobileCSS();
 
-        // Inject mobile bottom nav directly into parent document — bypasses React
+        // Inject mobile bottom nav into parent body (outside React) using plain anchor tags.
+        // target="_self" keeps navigation in the same tab; browser handles the click,
+        // so no sandbox restriction applies (only JS-initiated navigation is blocked).
         const updateMobileNav = () => {
           const parentDoc = window.parent.document;
           const currentNav = new URLSearchParams(window.parent.location.search).get('nav') || 'Home';
@@ -596,14 +598,9 @@ def apply_theme() -> None:
             nav.className = 'mobile-bottom-nav';
             const items = [['🏠', 'Home'], ['⚡', 'Algorithms'], ['👤', 'About']];
             nav.innerHTML = items.map(([icon, label]) =>
-              '<a data-nav="' + label + '" class="mob-nav-item">' +
+              '<a href="?nav=' + label + '" target="_self" data-nav="' + label + '" class="mob-nav-item">' +
               '<span class="mob-nav-icon">' + icon + '</span><span>' + label + '</span></a>'
             ).join('');
-            nav.querySelectorAll('[data-nav]').forEach(a => {
-              a.addEventListener('click', () => {
-                window.parent.location.href = '?nav=' + a.getAttribute('data-nav');
-              });
-            });
             parentDoc.body.appendChild(nav);
           }
           nav.querySelectorAll('.mob-nav-item').forEach(el => {
