@@ -192,12 +192,6 @@ def apply_theme() -> None:
             .hero-title {
                 letter-spacing: -0.03em;
             }
-            /* Always keep sidebar toggle visible */
-            [data-testid="stSidebarCollapsedControl"] {
-                display: flex !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-            }
             /* Mobile navigation hint — hidden on desktop */
             .mobile-nav-hint {
                 display: none;
@@ -510,13 +504,10 @@ def apply_theme() -> None:
                 height: 48px !important;
                 min-width: 48px !important;
                 min-height: 48px !important;
-                display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
                 backdrop-filter: blur(8px) !important;
                 box-shadow: 0 4px 20px rgba(0,0,0,0.32),0 0 0 1px rgba(76,201,240,0.2) !important;
-                visibility: visible !important;
-                opacity: 1 !important;
               }
               [data-testid="stSidebarCollapsedControl"] button {
                 background: transparent !important;
@@ -593,6 +584,24 @@ def apply_theme() -> None:
         };
 
         injectMobileCSS();
+
+        // On mobile: show collapsed-control only when sidebar is actually closed
+        const syncSidebarBtn = () => {
+          const parentDoc = window.parent.document;
+          if (parentDoc.documentElement.clientWidth > 768) return;
+          const sidebar = parentDoc.querySelector('[data-testid="stSidebar"]');
+          const ctrl = parentDoc.querySelector('[data-testid="stSidebarCollapsedControl"]');
+          if (!ctrl) return;
+          if (!sidebar) {
+            ctrl.style.setProperty('display', 'flex', 'important');
+            return;
+          }
+          const rect = sidebar.getBoundingClientRect();
+          const isOpen = rect.left >= -30;
+          ctrl.style.setProperty('display', isOpen ? 'none' : 'flex', 'important');
+          ctrl.style.setProperty('visibility', isOpen ? 'hidden' : 'visible', 'important');
+        };
+        setInterval(syncSidebarBtn, 200);
 
         hideChrome();
         setInterval(hideChrome, 800);
