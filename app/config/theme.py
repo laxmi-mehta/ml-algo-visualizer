@@ -260,11 +260,11 @@ def apply_theme() -> None:
                     padding-bottom: 5.5rem !important;
                 }
             }
+            /* Hide Streamlit's native sidebar toggle globally — replaced by #ml-hamburger */
+            [data-testid="stSidebarCollapsedControl"] {
+                display: none !important;
+            }
             @media (max-width: 768px) {
-                /* Hide Streamlit's native sidebar toggle — replaced by #ml-hamburger in body */
-                [data-testid="stSidebarCollapsedControl"] {
-                    display: none !important;
-                }
                 /* Stack multi-column layouts vertically on mobile */
                 [data-testid="stHorizontalBlock"] {
                     flex-wrap: wrap !important;
@@ -478,6 +478,7 @@ def apply_theme() -> None:
           style.id = 'ml-af-styles';
           style.textContent = `
             html, body { background-color: #0a101a !important; }
+            [data-testid="stSidebarCollapsedControl"] { display: none !important; }
             [data-testid="stSkeleton"] > div {
               background-color: rgba(255,255,255,0.07) !important;
               background-image: linear-gradient(90deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.10) 50%, rgba(255,255,255,0.04) 100%) !important;
@@ -496,7 +497,6 @@ def apply_theme() -> None:
           style.id = 'ml-mobile-styles';
           style.textContent = `
             @media (max-width: 768px) {
-              [data-testid="stSidebarCollapsedControl"] { display: none !important; }
               [data-testid="stHorizontalBlock"] {
                 flex-wrap: wrap !important;
                 gap: 0.5rem !important;
@@ -589,12 +589,6 @@ def apply_theme() -> None:
         // button, we bypass that constraint entirely.
         const ensureMobileHamburger = () => {
           const parentDoc = window.parent.document;
-          if (parentDoc.documentElement.clientWidth > 768) {
-            // On desktop remove the custom button if it somehow exists
-            const existing = parentDoc.getElementById('ml-hamburger');
-            if (existing) existing.style.display = 'none';
-            return;
-          }
           let btn = parentDoc.getElementById('ml-hamburger');
           if (!btn) {
             btn = parentDoc.createElement('button');
