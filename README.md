@@ -27,11 +27,7 @@ Instead of reading static notes or isolated notebooks, users can explore an **ML
 
 ## Screenshots
 
-Add screenshots or demo GIFs here before sharing widely:
-
-- `assets/screenshots/homepage.png`
-- `assets/screenshots/algorithm-view.png`
-- `assets/screenshots/concept-visualizer.png`
+Visit the [live demo](https://laxmimehta-ml-algo-visualizer.hf.space/) to see the app in action.
 
 ## Features
 
