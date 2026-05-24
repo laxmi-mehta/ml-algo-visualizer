@@ -609,8 +609,16 @@ def apply_theme() -> None:
               WebkitTapHighlightColor: 'transparent',
             });
             btn.addEventListener('click', () => {
+              // .click() is a no-op when the element's ancestor has display:none (no layout box).
+              // stSidebarCollapsedControl lives inside stHeader which we hide — so .click() silently
+              // fails on HF where the sidebar starts collapsed from a fresh Docker session.
+              // dispatchEvent bypasses the layout-box requirement and bubbles up to React's root.
               const real = parentDoc.querySelector('[data-testid="stSidebarCollapsedControl"] button');
-              if (real) real.click();
+              if (real) {
+                real.dispatchEvent(new window.parent.MouseEvent('click', {
+                  bubbles: true, cancelable: true, view: window.parent
+                }));
+              }
             });
             parentDoc.body.appendChild(btn);
           }
