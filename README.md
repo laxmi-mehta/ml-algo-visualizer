@@ -1,19 +1,3 @@
----
-title: ML Algorithm Visualizer
-emoji: 📈
-colorFrom: blue
-colorTo: indigo
-sdk: docker
-short_description: Interactive ML algorithm visualizer with Streamlit.
-tags:
-  - streamlit
-  - machine-learning
-  - scikit-learn
-  - data-visualization
-  - education
-pinned: false
----
-
 # ML Algorithm Visualizer
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
@@ -149,34 +133,6 @@ If `streamlit` is not on your PATH:
 python -m streamlit run app.py
 ```
 
-## Deployment Guide
-
-### Streamlit Community Cloud
-
-1. Push this repository to GitHub.
-2. Create a new Streamlit app.
-3. Select `app.py` as the entry file.
-4. Deploy without adding custom server port settings.
-
-### Hugging Face Spaces
-
-1. Create a new Space.
-2. Select `Docker` as the SDK.
-3. Push this repository to the Space remote.
-4. Hugging Face will build the included `Dockerfile` automatically.
-
-## SEO and Discoverability Focus
-
-This project is intentionally written and structured so it can surface better for searches like:
-
-- ML Algorithm Visualizer
-- Machine Learning Visualizer
-- Streamlit Machine Learning App
-- Interactive ML Project
-- Scikit-learn Visualizer
-
-The homepage, metadata, README, and deployment descriptions are aligned to support stronger discoverability across Google, GitHub, Hugging Face, and LinkedIn previews.
-
 ## Future Improvements
 
 - dataset upload support for selected pages
@@ -203,6 +159,3 @@ If you want to improve the app:
 - GitHub: [laxmi-mehta](https://github.com/laxmi-mehta/ml-algo-visualizer)
 - Hugging Face Live App: [ML Algorithm Visualizer](https://laxmimehta-ml-algo-visualizer.hf.space/)
 
-## LinkedIn-Ready Project Summary
-
-ML Algorithm Visualizer is an interactive machine learning visualizer built with Streamlit and Scikit-learn. It helps users understand classification, clustering, dimensionality reduction, optimization, and regularization through real-time controls, plots, metrics, and beginner-friendly explanations.
