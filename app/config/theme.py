@@ -202,6 +202,57 @@ def apply_theme() -> None:
             .mobile-nav-hint {
                 display: none;
             }
+            /* Mobile bottom nav bar — hidden on desktop */
+            .mobile-bottom-nav {
+                display: none;
+            }
+            @media (max-width: 768px) {
+                /* Fixed bottom nav bar */
+                .mobile-bottom-nav {
+                    display: flex !important;
+                    position: fixed !important;
+                    bottom: 0 !important;
+                    left: 0 !important;
+                    right: 0 !important;
+                    z-index: 99998 !important;
+                    background: rgba(10, 16, 26, 0.97) !important;
+                    border-top: 1px solid rgba(255, 255, 255, 0.10) !important;
+                    padding: 0.4rem 0.5rem calc(0.4rem + env(safe-area-inset-bottom)) !important;
+                    gap: 0.25rem !important;
+                    backdrop-filter: blur(16px) !important;
+                    -webkit-backdrop-filter: blur(16px) !important;
+                }
+                .mob-nav-item {
+                    flex: 1 !important;
+                    text-align: center !important;
+                    padding: 0.5rem 0.2rem !important;
+                    color: rgba(247, 247, 245, 0.55) !important;
+                    text-decoration: none !important;
+                    font-size: 0.70rem !important;
+                    border-radius: 10px !important;
+                    border: 1px solid transparent !important;
+                    display: flex !important;
+                    flex-direction: column !important;
+                    align-items: center !important;
+                    gap: 0.15rem !important;
+                    transition: all 0.15s ease !important;
+                    -webkit-tap-highlight-color: transparent !important;
+                }
+                .mob-nav-active {
+                    background: rgba(76, 201, 240, 0.14) !important;
+                    border-color: rgba(76, 201, 240, 0.35) !important;
+                    color: #4cc9f0 !important;
+                }
+                .mob-nav-icon {
+                    font-size: 1.3rem !important;
+                    display: block !important;
+                    line-height: 1 !important;
+                }
+                /* Padding so content isn't hidden behind bottom nav */
+                .block-container {
+                    padding-bottom: 5.5rem !important;
+                }
+            }
             @media (max-width: 768px) {
                 /* Prominent sidebar open button on mobile */
                 [data-testid="stSidebarCollapsedControl"] {
@@ -496,7 +547,45 @@ def apply_theme() -> None:
                 padding-top: 3.5rem !important;
                 padding-left: 0.75rem !important;
                 padding-right: 0.75rem !important;
+                padding-bottom: 5.5rem !important;
                 max-width: 100vw !important;
+              }
+              .mobile-bottom-nav {
+                display: flex !important;
+                position: fixed !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                z-index: 99998 !important;
+                background: rgba(10,16,26,0.97) !important;
+                border-top: 1px solid rgba(255,255,255,0.10) !important;
+                padding: 0.4rem 0.5rem calc(0.4rem + env(safe-area-inset-bottom)) !important;
+                gap: 0.25rem !important;
+                backdrop-filter: blur(16px) !important;
+              }
+              .mob-nav-item {
+                flex: 1 !important;
+                text-align: center !important;
+                padding: 0.5rem 0.2rem !important;
+                color: rgba(247,247,245,0.55) !important;
+                text-decoration: none !important;
+                font-size: 0.70rem !important;
+                border-radius: 10px !important;
+                border: 1px solid transparent !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 0.15rem !important;
+              }
+              .mob-nav-active {
+                background: rgba(76,201,240,0.14) !important;
+                border-color: rgba(76,201,240,0.35) !important;
+                color: #4cc9f0 !important;
+              }
+              .mob-nav-icon {
+                font-size: 1.3rem !important;
+                display: block !important;
+                line-height: 1 !important;
               }
             }
           `;

@@ -88,11 +88,6 @@ def render_home_page() -> None:
         ]
     )
 
-    st.markdown(
-        '<div class="mobile-nav-hint">Tap the ☰ button (top-left) to open the navigation menu and explore algorithms.</div>',
-        unsafe_allow_html=True,
-    )
-
     hero_col1, hero_col2 = st.columns([1.4, 1.0], gap="large")
     with hero_col1:
         render_spotlight_card(

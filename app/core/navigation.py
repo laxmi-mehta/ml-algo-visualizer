@@ -7,14 +7,22 @@ from app.core.registry import get_algorithms_grouped_by_category, search_algorit
 
 
 def render_sidebar() -> tuple[str, str | None]:
+    options = ["Home", "Algorithms", "About"]
+    default = st.query_params.get("nav", "Home")
+    if default not in options:
+        default = "Home"
+
     st.sidebar.title(APP_TITLE)
     st.sidebar.caption("Interactive Machine Learning Visualizer built with Streamlit and Scikit-learn.")
 
     mode = st.sidebar.radio(
         "Navigate",
-        options=["Home", "Algorithms", "About"],
+        options=options,
+        index=options.index(default),
         label_visibility="collapsed",
     )
+    if mode != default:
+        st.query_params["nav"] = mode
 
     if mode == "Home":
         return "home", None
