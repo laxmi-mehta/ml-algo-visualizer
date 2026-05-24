@@ -10,8 +10,6 @@ __pycache__/
 .DS_Store
 Thumbs.db
 .idea/
-.qodo/
-.sixth/
 streamlit.err.log
 streamlit.out.log
 *.log
