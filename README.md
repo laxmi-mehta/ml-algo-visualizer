@@ -25,9 +25,6 @@ Instead of reading static notes or isolated notebooks, users can explore an **ML
 - data science visualization
 - guided interpretation for ML intuition
 
-## Screenshots
-
-Visit the [live demo](https://laxmimehta-ml-algo-visualizer.hf.space/) to see the app in action.
 
 ## Features
 
