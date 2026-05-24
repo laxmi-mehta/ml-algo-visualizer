@@ -197,15 +197,4 @@ def render_home_page() -> None:
         with st.expander(f"{category} - {len(algorithms)} visualizers", expanded=category == "Concept Visualizers"):
             _render_algorithm_catalog(algorithms)
 
-    render_section_title("Portfolio Story", "This is the language you can use when presenting the project on GitHub or in interviews.")
-    st.markdown(
-        """
-        <div class="glass-card">
-            <div class="roadmap-line"><strong>Product angle:</strong> a teaching-first machine learning dashboard built as a reusable, discoverable Streamlit ML App.</div>
-            <div class="roadmap-line"><strong>Engineering angle:</strong> registry-driven architecture, shared page shell, reusable UI blocks, and deployment-ready packaging for GitHub and Hugging Face.</div>
-            <div class="roadmap-line"><strong>Learning angle:</strong> every ML Algorithm Visualizer module combines controls, plots, metrics, explanation, and common mistakes in one place.</div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
     render_footer(APP_AUTHOR, GITHUB_URL, HUGGING_FACE_URL)

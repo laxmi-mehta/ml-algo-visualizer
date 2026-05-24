@@ -248,38 +248,9 @@ def apply_theme() -> None:
                 }
             }
             @media (max-width: 768px) {
-                /* Prominent sidebar open button on mobile */
+                /* Hide Streamlit's native sidebar toggle — replaced by #ml-hamburger in body */
                 [data-testid="stSidebarCollapsedControl"] {
-                    position: fixed !important;
-                    top: 0.55rem !important;
-                    left: 0.55rem !important;
-                    z-index: 999999 !important;
-                    background: rgba(76, 201, 240, 0.18) !important;
-                    border: 1.5px solid rgba(76, 201, 240, 0.55) !important;
-                    border-radius: 12px !important;
-                    width: 48px !important;
-                    height: 48px !important;
-                    min-width: 48px !important;
-                    min-height: 48px !important;
-                    align-items: center !important;
-                    justify-content: center !important;
-                    backdrop-filter: blur(8px) !important;
-                    box-shadow: 0 4px 20px rgba(0,0,0,0.32), 0 0 0 1px rgba(76,201,240,0.2) !important;
-                }
-                [data-testid="stSidebarCollapsedControl"] svg {
-                    fill: #4cc9f0 !important;
-                    width: 22px !important;
-                    height: 22px !important;
-                }
-                [data-testid="stSidebarCollapsedControl"] button {
-                    background: transparent !important;
-                    border: none !important;
-                    color: #4cc9f0 !important;
-                    width: 100% !important;
-                    height: 100% !important;
-                    display: flex !important;
-                    align-items: center !important;
-                    justify-content: center !important;
+                    display: none !important;
                 }
                 /* Stack multi-column layouts vertically on mobile */
                 [data-testid="stHorizontalBlock"] {
@@ -492,38 +463,7 @@ def apply_theme() -> None:
           style.id = 'ml-mobile-styles';
           style.textContent = `
             @media (max-width: 768px) {
-              [data-testid="stSidebarCollapsedControl"] {
-                position: fixed !important;
-                top: 0.6rem !important;
-                left: 0.6rem !important;
-                z-index: 999999 !important;
-                background: rgba(76,201,240,0.18) !important;
-                border: 1.5px solid rgba(76,201,240,0.55) !important;
-                border-radius: 12px !important;
-                width: 48px !important;
-                height: 48px !important;
-                min-width: 48px !important;
-                min-height: 48px !important;
-                align-items: center !important;
-                justify-content: center !important;
-                backdrop-filter: blur(8px) !important;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.32),0 0 0 1px rgba(76,201,240,0.2) !important;
-              }
-              [data-testid="stSidebarCollapsedControl"] button {
-                background: transparent !important;
-                border: none !important;
-                color: #4cc9f0 !important;
-                width: 100% !important;
-                height: 100% !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-              }
-              [data-testid="stSidebarCollapsedControl"] svg {
-                fill: #4cc9f0 !important;
-                width: 22px !important;
-                height: 22px !important;
-              }
+              [data-testid="stSidebarCollapsedControl"] { display: none !important; }
               [data-testid="stHorizontalBlock"] {
                 flex-wrap: wrap !important;
                 gap: 0.5rem !important;
@@ -609,23 +549,51 @@ def apply_theme() -> None:
         };
         updateMobileNav();
 
-        // On mobile: show collapsed-control only when sidebar is actually closed
-        const syncSidebarBtn = () => {
+        // Custom hamburger button injected into body so parent display:none cannot hide it.
+        // stSidebarCollapsedControl lives inside stHeader which we hide via CSS — any child
+        // of a display:none element is invisible regardless of its own display property.
+        // By creating our own button in body and programmatically clicking the real Streamlit
+        // button, we bypass that constraint entirely.
+        const ensureMobileHamburger = () => {
           const parentDoc = window.parent.document;
-          if (parentDoc.documentElement.clientWidth > 768) return;
-          const sidebar = parentDoc.querySelector('[data-testid="stSidebar"]');
-          const ctrl = parentDoc.querySelector('[data-testid="stSidebarCollapsedControl"]');
-          if (!ctrl) return;
-          if (!sidebar) {
-            ctrl.style.setProperty('display', 'flex', 'important');
+          if (parentDoc.documentElement.clientWidth > 768) {
+            // On desktop remove the custom button if it somehow exists
+            const existing = parentDoc.getElementById('ml-hamburger');
+            if (existing) existing.style.display = 'none';
             return;
           }
+          let btn = parentDoc.getElementById('ml-hamburger');
+          if (!btn) {
+            btn = parentDoc.createElement('button');
+            btn.id = 'ml-hamburger';
+            btn.setAttribute('aria-label', 'Open navigation');
+            btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 20 20" fill="#4cc9f0"><rect y="2" width="20" height="2.5" rx="1.25"/><rect y="8.75" width="20" height="2.5" rx="1.25"/><rect y="15.5" width="20" height="2.5" rx="1.25"/></svg>';
+            Object.assign(btn.style, {
+              position: 'fixed', top: '0.5rem', left: '0.5rem',
+              zIndex: '999999',
+              background: 'rgba(76,201,240,0.18)',
+              border: '1.5px solid rgba(76,201,240,0.55)',
+              borderRadius: '12px',
+              width: '44px', height: '44px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer',
+              backdropFilter: 'blur(8px)',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.32)',
+              WebkitTapHighlightColor: 'transparent',
+            });
+            btn.addEventListener('click', () => {
+              const real = parentDoc.querySelector('[data-testid="stSidebarCollapsedControl"] button');
+              if (real) real.click();
+            });
+            parentDoc.body.appendChild(btn);
+          }
+          // Show only when sidebar is closed
+          const sidebar = parentDoc.querySelector('[data-testid="stSidebar"]');
+          if (!sidebar) { btn.style.display = 'flex'; return; }
           const rect = sidebar.getBoundingClientRect();
-          const isOpen = rect.left >= -30;
-          ctrl.style.setProperty('display', isOpen ? 'none' : 'flex', 'important');
-          ctrl.style.setProperty('visibility', isOpen ? 'hidden' : 'visible', 'important');
+          btn.style.display = rect.left > -50 ? 'none' : 'flex';
         };
-        setInterval(syncSidebarBtn, 200);
+        setInterval(ensureMobileHamburger, 200);
 
         // Auto-collapse sidebar after a nav option (radio) is selected — works on all screen sizes.
         // Uses event delegation on the sidebar container so it survives Streamlit re-renders.

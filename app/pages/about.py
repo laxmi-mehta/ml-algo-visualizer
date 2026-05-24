@@ -73,10 +73,4 @@ def render_about_page() -> None:
             for algorithm in algorithms:
                 st.markdown(f"- **{algorithm.name}**: {algorithm.overview}")
 
-    render_section_title("Deployment Path", "The current app is designed for easy public deployment without extra services.")
-    dep_col1, dep_col2 = st.columns(2, gap="large")
-    with dep_col1:
-        render_info_card("Recommended host", "Streamlit Community Cloud is the best fit for this architecture because it is free-friendly and requires minimal setup.")
-    with dep_col2:
-        render_info_card("Production-ready share path", "The same codebase is prepared for GitHub and Hugging Face Spaces so the project is easier to discover, review, and demo publicly.")
     render_footer(APP_AUTHOR, GITHUB_URL, HUGGING_FACE_URL)
