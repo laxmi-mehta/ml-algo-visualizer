@@ -35,6 +35,19 @@ def apply_theme() -> None:
                 --radius-lg: 18px;
                 --radius-md: 14px;
             }
+            html, body {
+                background-color: #0a101a !important;
+            }
+            /* Dark skeleton during Streamlit loading/rerun — prevents white flash */
+            [data-testid="stSkeleton"] > div {
+                background-color: rgba(255, 255, 255, 0.07) !important;
+                background-image: linear-gradient(90deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.10) 50%, rgba(255,255,255,0.04) 100%) !important;
+            }
+            /* Fade stale content on rerun instead of showing white */
+            [data-stale="true"] {
+                opacity: 0.55 !important;
+                transition: opacity 0.12s ease !important;
+            }
             .stApp {
                 background:
                     radial-gradient(circle at top left, rgba(76, 201, 240, 0.16), transparent 24%),
@@ -454,6 +467,26 @@ def apply_theme() -> None:
           parentDoc.head.appendChild(canonical);
         }
         canonical.setAttribute('href', __HUGGING_FACE_URL__);
+
+        // Inject dark background into parent document head as early as possible.
+        // This persists across Streamlit re-renders (sidebar nav) because the style tag
+        // stays in parentDoc.head until a full page reload.
+        const injectAntiFlashCSS = () => {
+          const parentDoc = window.parent.document;
+          if (parentDoc.getElementById('ml-af-styles')) return;
+          const style = parentDoc.createElement('style');
+          style.id = 'ml-af-styles';
+          style.textContent = `
+            html, body { background-color: #0a101a !important; }
+            [data-testid="stSkeleton"] > div {
+              background-color: rgba(255,255,255,0.07) !important;
+              background-image: linear-gradient(90deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.10) 50%, rgba(255,255,255,0.04) 100%) !important;
+            }
+            [data-stale="true"] { opacity: 0.55 !important; transition: opacity 0.12s ease !important; }
+          `;
+          parentDoc.head.appendChild(style);
+        };
+        injectAntiFlashCSS();
 
         // Inject mobile CSS directly into the parent Streamlit document
         const injectMobileCSS = () => {
