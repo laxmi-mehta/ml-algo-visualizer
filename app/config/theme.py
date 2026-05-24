@@ -627,25 +627,58 @@ def apply_theme() -> None:
         };
         setInterval(syncSidebarBtn, 200);
 
-        // Auto-collapse sidebar on mobile after a nav option (radio) is selected
+        // Auto-collapse sidebar after a nav option (radio) is selected — works on all screen sizes.
+        // Uses event delegation on the sidebar container so it survives Streamlit re-renders.
+        // dataset.collapseSetup survives JS GC unlike a plain JS property.
         const setupSidebarAutoCollapse = () => {
           const parentDoc = window.parent.document;
-          if (parentDoc.documentElement.clientWidth > 768) return;
           const sidebar = parentDoc.querySelector('[data-testid="stSidebar"]');
-          if (!sidebar || sidebar._collapseSetup) return;
-          const radios = sidebar.querySelectorAll('input[type="radio"]');
-          if (!radios.length) return;
-          sidebar._collapseSetup = true;
-          radios.forEach(radio => {
-            radio.addEventListener('change', () => {
-              setTimeout(() => {
-                const btn = parentDoc.querySelector('[data-testid="stSidebarCollapseButton"]');
-                if (btn) btn.click();
-              }, 350);
-            });
+          if (!sidebar) return;
+          if (sidebar.dataset.collapseSetup === '1') return;
+          sidebar.dataset.collapseSetup = '1';
+          sidebar.addEventListener('click', (e) => {
+            if (!e.target.closest('[data-testid="stRadio"]')) return;
+            setTimeout(() => {
+              const btn = parentDoc.querySelector('[data-testid="stSidebarCollapseButton"]');
+              if (btn) btn.click();
+            }, 300);
           });
         };
         setInterval(setupSidebarAutoCollapse, 500);
+
+        // Style Category selector (gold) and Algorithm selector (cyan) so they look distinct.
+        const styleNavSelectors = () => {
+          const parentDoc = window.parent.document;
+          parentDoc.querySelectorAll('[data-testid="stSelectbox"]').forEach(sel => {
+            const label = sel.querySelector('label');
+            if (!label) return;
+            const txt = label.textContent.trim();
+            const ctrl = sel.querySelector('[data-baseweb="select"] > div');
+            if (txt === 'Category') {
+              label.style.setProperty('color', '#ffcb77', 'important');
+              label.style.setProperty('font-weight', '700', 'important');
+              label.style.setProperty('text-transform', 'uppercase', 'important');
+              label.style.setProperty('letter-spacing', '0.07em', 'important');
+              label.style.setProperty('font-size', '0.72rem', 'important');
+              if (ctrl) {
+                ctrl.style.setProperty('border-color', 'rgba(255,203,119,0.55)', 'important');
+                ctrl.style.setProperty('background', 'rgba(255,203,119,0.05)', 'important');
+              }
+            } else if (txt === 'Algorithm') {
+              label.style.setProperty('color', '#4cc9f0', 'important');
+              label.style.setProperty('font-weight', '700', 'important');
+              label.style.setProperty('text-transform', 'uppercase', 'important');
+              label.style.setProperty('letter-spacing', '0.07em', 'important');
+              label.style.setProperty('font-size', '0.72rem', 'important');
+              if (ctrl) {
+                ctrl.style.setProperty('border-color', 'rgba(76,201,240,0.55)', 'important');
+                ctrl.style.setProperty('background', 'rgba(76,201,240,0.05)', 'important');
+              }
+            }
+          });
+        };
+        styleNavSelectors();
+        setInterval(styleNavSelectors, 800);
 
         hideChrome();
         setInterval(hideChrome, 800);
