@@ -558,6 +558,46 @@ def apply_theme() -> None:
 
         injectMobileCSS();
 
+        // Inject desktop sticky-sidebar CSS into parent doc <head>.
+        // A <style> tag in <head> survives Streamlit React rerenders (React only controls
+        // the body content, not <head>). This is more reliable than JS inline styles,
+        // which React resets on each rerender cycle.
+        const injectDesktopSidebar = () => {
+          const parentDoc = window.parent.document;
+          const css = `
+            @media (min-width: 769px) {
+              [data-testid="stSidebar"] {
+                display: block !important;
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                height: 100vh !important;
+                width: 21rem !important;
+                min-width: 21rem !important;
+                transform: none !important;
+                visibility: visible !important;
+                overflow-y: auto !important;
+                z-index: 100 !important;
+              }
+              [data-testid="stMain"] {
+                margin-left: 21rem !important;
+                padding-left: 0 !important;
+              }
+              [data-testid="stSidebarCollapseButton"] {
+                display: none !important;
+              }
+            }
+          `;
+          let style = parentDoc.getElementById('ml-desktop-sb');
+          if (!style) {
+            style = parentDoc.createElement('style');
+            style.id = 'ml-desktop-sb';
+            parentDoc.head.appendChild(style);
+          }
+          if (style.textContent !== css) style.textContent = css;
+        };
+        injectDesktopSidebar();
+
         // Inject mobile bottom nav into parent body (outside React) using plain anchor tags.
         // target="_self" keeps navigation in the same tab; browser handles the click,
         // so no sandbox restriction applies (only JS-initiated navigation is blocked).
@@ -628,6 +668,21 @@ def apply_theme() -> None:
 
         const ensureMobileHamburger = () => {
           const parentDoc = window.parent.document;
+          const sidebar = parentDoc.querySelector('[data-testid="stSidebar"]');
+          const isMobile = window.parent.innerWidth <= 768;
+
+          if (!isMobile) {
+            // Desktop: CSS (ml-desktop-sb in <head>) handles sidebar visibility.
+            // Just ensure hamburger and overlay are hidden.
+            const existingBtn = parentDoc.getElementById('ml-hamburger');
+            if (existingBtn) existingBtn.style.display = 'none';
+            const ov = parentDoc.getElementById('ml-sb-overlay');
+            if (ov) ov.style.display = 'none';
+            if (sidebar) sidebar.style.removeProperty('z-index');
+            return;
+          }
+
+          // Mobile: hamburger toggle
           let btn = parentDoc.getElementById('ml-hamburger');
           if (!btn) {
             btn = parentDoc.createElement('button');
@@ -651,14 +706,13 @@ def apply_theme() -> None:
             parentDoc.body.appendChild(btn);
           }
           // Show hamburger only when sidebar is off-screen (collapsed)
-          const sidebar = parentDoc.querySelector('[data-testid="stSidebar"]');
           if (!sidebar) { btn.style.display = 'flex'; return; }
           const rect = sidebar.getBoundingClientRect();
           btn.style.display = rect.left > -50 ? 'none' : 'flex';
         };
         setInterval(ensureMobileHamburger, 200);
 
-        // Close sidebar (remove CSS override) when a nav radio is clicked.
+        // Close sidebar on mobile only when a nav radio is clicked.
         const setupSidebarAutoCollapse = () => {
           const parentDoc = window.parent.document;
           const sidebar = parentDoc.querySelector('[data-testid="stSidebar"]');
@@ -667,10 +721,40 @@ def apply_theme() -> None:
           sidebar.dataset.collapseSetup = '1';
           sidebar.addEventListener('click', (e) => {
             if (!e.target.closest('[data-testid="stRadio"]')) return;
-            setTimeout(mlCloseSidebar, 300);
+            if (window.parent.innerWidth <= 768) setTimeout(mlCloseSidebar, 300);
           });
         };
         setInterval(setupSidebarAutoCollapse, 500);
+
+        // Intercept Streamlit's native < collapse button inside the sidebar on mobile.
+        // Our CSS override (visibility !important) prevents React from hiding the sidebar,
+        // so we must call mlCloseSidebar ourselves to remove the override first.
+        const setupMobileCloseButton = () => {
+          const parentDoc = window.parent.document;
+          const closeBtn = parentDoc.querySelector('[data-testid="stSidebarCollapseButton"]');
+          if (!closeBtn || closeBtn.dataset.mlClose === '1') return;
+          closeBtn.dataset.mlClose = '1';
+          closeBtn.addEventListener('click', () => {
+            if (window.parent.innerWidth <= 768) mlCloseSidebar();
+          }, true);
+        };
+        setInterval(setupMobileCloseButton, 500);
+
+        // Fix two-click navigation: the components.html iframe can steal window focus,
+        // so the first click on a sidebar radio item focuses the parent window and the
+        // second click actually registers. Calling window.parent.focus() on mousedown
+        // (before click fires) ensures the parent is focused and the click registers once.
+        const fixRadioSingleClick = () => {
+          const parentDoc = window.parent.document;
+          parentDoc.querySelectorAll('[data-testid="stSidebar"] [data-testid="stRadio"] label').forEach(label => {
+            if (label.dataset.sc === '1') return;
+            label.dataset.sc = '1';
+            label.addEventListener('mousedown', () => {
+              try { window.parent.focus(); } catch(e) {}
+            }, true);
+          });
+        };
+        setInterval(fixRadioSingleClick, 800);
 
         // Style Category selector (gold) and Algorithm selector (cyan) so they look distinct.
         const styleNavSelectors = () => {
