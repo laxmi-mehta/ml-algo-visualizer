@@ -37,6 +37,10 @@ def apply_theme() -> None:
             }
             html, body {
                 background-color: #0a101a !important;
+                color-scheme: dark;
+            }
+            #root {
+                background-color: #0a101a !important;
             }
             /* Dark skeleton during Streamlit loading/rerun — prevents white flash */
             [data-testid="stSkeleton"] > div {
@@ -477,7 +481,7 @@ def apply_theme() -> None:
           const style = parentDoc.createElement('style');
           style.id = 'ml-af-styles';
           style.textContent = `
-            html, body { background-color: #0a101a !important; }
+            html, body, #root { background-color: #0a101a !important; color-scheme: dark; }
             [data-testid="stSidebarCollapsedControl"] { display: none !important; }
             [data-testid="stSkeleton"] > div {
               background-color: rgba(255,255,255,0.07) !important;
@@ -566,22 +570,12 @@ def apply_theme() -> None:
           const parentDoc = window.parent.document;
           const css = `
             @media (min-width: 769px) {
+              [data-testid="stSidebar"][aria-expanded="false"],
+              [data-testid="stSidebar"][aria-expanded="true"],
               [data-testid="stSidebar"] {
+                transform: translateX(0) !important;
                 display: block !important;
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-                height: 100vh !important;
-                width: 21rem !important;
-                min-width: 21rem !important;
-                transform: none !important;
                 visibility: visible !important;
-                overflow-y: auto !important;
-                z-index: 100 !important;
-              }
-              [data-testid="stMain"] {
-                margin-left: 21rem !important;
-                padding-left: 0 !important;
               }
               [data-testid="stSidebarCollapseButton"] {
                 display: none !important;
