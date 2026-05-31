@@ -19,6 +19,7 @@ def apply_theme() -> None:
     st.markdown(
         """
         <style>
+            /* ── Dark mode (default) ── */
             :root {
                 --bg-page: #0a101a;
                 --bg-panel: rgba(16, 24, 38, 0.82);
@@ -35,29 +36,118 @@ def apply_theme() -> None:
                 --radius-lg: 18px;
                 --radius-md: 14px;
             }
-            html, body {
-                background-color: #0a101a !important;
-                color-scheme: dark;
-            }
-            #root {
-                background-color: #0a101a !important;
-            }
-            /* Dark skeleton during Streamlit loading/rerun — prevents white flash */
-            [data-testid="stSkeleton"] > div {
-                background-color: rgba(255, 255, 255, 0.07) !important;
-                background-image: linear-gradient(90deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.10) 50%, rgba(255,255,255,0.04) 100%) !important;
-            }
-            /* Fade stale content on rerun instead of showing white */
-            [data-stale="true"] {
-                opacity: 0.55 !important;
-                transition: opacity 0.12s ease !important;
-            }
+            html, body, #root { background-color: #0a101a !important; color-scheme: dark; }
             .stApp {
                 background:
                     radial-gradient(circle at top left, rgba(76, 201, 240, 0.16), transparent 24%),
                     radial-gradient(circle at 85% 10%, rgba(255, 203, 119, 0.14), transparent 20%),
                     linear-gradient(180deg, #0a101a 0%, #0c1422 100%);
             }
+            /* ── Light mode override ── */
+            html[data-theme="light"] {
+                --bg-page: #f0f4f9;
+                --bg-panel: rgba(255, 255, 255, 0.90);
+                --bg-panel-strong: rgba(255, 255, 255, 0.98);
+                --bg-panel-soft: rgba(0, 0, 0, 0.04);
+                --border-soft: rgba(0, 0, 0, 0.08);
+                --text-main: #1a1f2e;
+                --text-muted: rgba(26, 31, 46, 0.60);
+                --accent-coral: #e85d5d;
+                --accent-cyan: #0ea5e9;
+                --accent-gold: #d97706;
+                --accent-mint: #059669;
+            }
+            html[data-theme="light"], html[data-theme="light"] body, html[data-theme="light"] #root {
+                background-color: #f0f4f9 !important;
+                color-scheme: light;
+            }
+            html[data-theme="light"] .stApp {
+                background: linear-gradient(135deg, #eaf1fb 0%, #f0f4f9 50%, #f4f0fd 100%) !important;
+            }
+            /* Light mode — override ALL text since Streamlit base is dark */
+            html[data-theme="light"] h1, html[data-theme="light"] h2, html[data-theme="light"] h3,
+            html[data-theme="light"] h4, html[data-theme="light"] h5, html[data-theme="light"] h6 {
+                color: #1a1f2e !important;
+            }
+            html[data-theme="light"] p, html[data-theme="light"] li, html[data-theme="light"] strong,
+            html[data-theme="light"] em, html[data-theme="light"] span, html[data-theme="light"] label,
+            html[data-theme="light"] div, html[data-theme="light"] a:not(.nav-item):not(.nav-item-center),
+            html[data-theme="light"] [data-testid="stMarkdownContainer"] *,
+            html[data-theme="light"] [data-testid="stText"] *,
+            html[data-theme="light"] [data-testid="stCaption"] *,
+            html[data-theme="light"] [data-testid="stMetricValue"],
+            html[data-theme="light"] [data-testid="stMetricLabel"],
+            html[data-theme="light"] [data-testid="stExpander"] *,
+            html[data-theme="light"] [data-testid="stSlider"] * {
+                color: #1a1f2e !important;
+            }
+            html[data-theme="light"] [data-testid="stCaptionContainer"] * { color: rgba(26,31,46,0.55) !important; }
+            /* Light mode Streamlit widgets — override dark-base widget styles */
+            html[data-theme="light"] input,
+            html[data-theme="light"] textarea,
+            html[data-theme="light"] [data-baseweb="input"] input,
+            html[data-theme="light"] [data-baseweb="select"] input {
+                background: white !important;
+                color: #1a1f2e !important;
+                border-color: rgba(0,0,0,0.15) !important;
+            }
+            html[data-theme="light"] [data-baseweb="select"] > div,
+            html[data-theme="light"] [data-baseweb="input"] > div {
+                background: white !important;
+                border-color: rgba(0,0,0,0.15) !important;
+                color: #1a1f2e !important;
+            }
+            /* Dropdown portal (appended to body, outside sidebar) */
+            /* Dropdown list portal (BaseWeb, appended to body) */
+            html[data-theme="light"] [data-baseweb="popover"],
+            html[data-theme="light"] [data-baseweb="menu"],
+            html[data-theme="light"] [role="listbox"] {
+                background: white !important;
+                border: 1px solid rgba(0,0,0,0.10) !important;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.10) !important;
+            }
+            html[data-theme="light"] [role="option"],
+            html[data-theme="light"] [data-baseweb="menu"] li {
+                background: white !important;
+                color: #1a1f2e !important;
+            }
+            html[data-theme="light"] [role="option"]:hover,
+            html[data-theme="light"] [data-baseweb="menu"] li:hover,
+            html[data-theme="light"] [role="option"][aria-selected="true"] {
+                background: rgba(14, 165, 233, 0.10) !important;
+                color: #0ea5e9 !important;
+            }
+            /* Search input placeholder fix in light mode */
+            html[data-theme="light"] input::placeholder {
+                color: rgba(26, 31, 46, 0.40) !important;
+                opacity: 1 !important;
+            }
+            html[data-theme="light"] input:-webkit-input-placeholder { color: rgba(26,31,46,0.40) !important; }
+            /* Sidebar light mode */
+            html[data-theme="light"] [data-testid="stSidebar"] {
+                background: rgba(248, 250, 253, 0.98) !important;
+                border-right: 1px solid rgba(0,0,0,0.07) !important;
+            }
+            html[data-theme="light"] [data-testid="stSidebar"] * { color: #1a1f2e !important; }
+            html[data-theme="light"] [data-testid="stSidebar"] [data-baseweb="select"] > div,
+            html[data-theme="light"] [data-testid="stSidebar"] [data-baseweb="input"] > div,
+            html[data-theme="light"] [data-testid="stSidebar"] input {
+                background: white !important;
+                border-color: rgba(0,0,0,0.12) !important;
+                color: #1a1f2e !important;
+            }
+            html[data-theme="light"] [data-testid="stSidebar"] input::placeholder {
+                color: rgba(26,31,46,0.38) !important;
+                opacity: 1 !important;
+            }
+            /* Main Streamlit container background */
+            html[data-theme="light"] [data-testid="stMain"],
+            html[data-theme="light"] [data-testid="stMainBlockContainer"],
+            html[data-theme="light"] [data-testid="stAppViewContainer"] {
+                background: transparent !important;
+            }
+            /* Rerun fade */
+            [data-stale="true"] { opacity: 0.55 !important; transition: opacity 0.12s ease !important; }
             [data-testid="stHeader"],
             [data-testid="stToolbar"],
             [data-testid="stStatusWidget"],
@@ -75,41 +165,70 @@ def apply_theme() -> None:
                 padding-bottom: 3rem;
                 max-width: 1180px;
             }
+            /* Sidebar — dark base handles dark mode natively */
             [data-testid="stSidebar"] {
-                background: linear-gradient(180deg, rgba(13, 20, 32, 0.98) 0%, rgba(10, 16, 26, 0.98) 100%);
                 border-right: 1px solid rgba(255, 255, 255, 0.06);
             }
-            [data-testid="stSidebar"] * {
-                color: var(--text-main);
+            /* Light mode sidebar override */
+            html[data-theme="light"] [data-testid="stSidebar"] {
+                background: rgba(248, 250, 253, 0.98) !important;
+                border-right: 1px solid rgba(0, 0, 0, 0.07) !important;
+            }
+            html[data-theme="light"] [data-testid="stSidebar"] * {
+                color: #1a1f2e !important;
             }
             .hero-card {
                 padding: 1.6rem 1.8rem;
                 border-radius: var(--radius-xl);
                 background:
-                    radial-gradient(circle at top right, rgba(255, 203, 119, 0.24), transparent 22%),
+                    radial-gradient(circle at top right, rgba(255, 203, 119, 0.28), transparent 22%),
+                    radial-gradient(circle at bottom left, rgba(76, 201, 240, 0.14), transparent 30%),
                     linear-gradient(135deg, rgba(76, 201, 240, 0.18) 0%, rgba(255, 107, 107, 0.12) 100%);
-                border: 1px solid var(--border-soft);
-                box-shadow: 0 18px 60px rgba(0, 0, 0, 0.22);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                box-shadow:
+                    0 24px 64px rgba(0, 0, 0, 0.30),
+                    0 4px 16px rgba(0, 0, 0, 0.20),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.12);
                 margin-bottom: 1rem;
                 color: var(--text-main);
                 overflow: hidden;
+                transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+                will-change: transform;
+            }
+            .hero-card:hover {
+                transform: perspective(800px) rotateX(-1.5deg) translateY(-5px);
+                box-shadow:
+                    0 36px 80px rgba(0, 0, 0, 0.36),
+                    0 0 40px rgba(255, 203, 119, 0.10),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.16);
             }
             .section-card {
                 padding: 1rem 1.1rem;
                 border-radius: var(--radius-md);
-                background: var(--bg-panel-soft);
-                border: 1px solid var(--border-soft);
+                background: linear-gradient(145deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 100%);
+                border: 1px solid rgba(255, 255, 255, 0.09);
                 margin-bottom: 0.75rem;
                 color: var(--text-main);
-                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255,255,255,0.08);
+                transition: transform 0.25s ease, box-shadow 0.25s ease;
+            }
+            .section-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 18px 40px rgba(0, 0, 0, 0.26), inset 0 1px 0 rgba(255,255,255,0.10);
             }
             .metric-card {
                 padding: 0.9rem 1rem;
                 border-radius: var(--radius-md);
-                background: var(--bg-panel-soft);
-                border: 1px solid var(--border-soft);
+                background: linear-gradient(145deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 100%);
+                border: 1px solid rgba(255, 255, 255, 0.09);
                 min-height: 88px;
                 color: var(--text-main);
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16), inset 0 1px 0 rgba(255,255,255,0.08);
+                transition: transform 0.25s ease, box-shadow 0.25s ease;
+            }
+            .metric-card:hover {
+                transform: translateY(-3px) scale(1.02);
+                box-shadow: 0 16px 36px rgba(0, 0, 0, 0.24), 0 0 16px rgba(76,201,240,0.07);
             }
             .small-muted {
                 color: var(--text-muted);
@@ -118,11 +237,17 @@ def apply_theme() -> None:
             .glass-card {
                 padding: 1.1rem 1.15rem;
                 border-radius: var(--radius-lg);
-                background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
-                border: 1px solid var(--border-soft);
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+                background: linear-gradient(145deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.04) 100%);
+                border: 1px solid rgba(255, 255, 255, 0.10);
+                box-shadow: 0 20px 48px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255,255,255,0.10);
                 color: var(--text-main);
                 height: 100%;
+                transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+                will-change: transform;
+            }
+            .glass-card:hover {
+                transform: perspective(700px) rotateX(-1.5deg) translateY(-4px);
+                box-shadow: 0 28px 56px rgba(0, 0, 0, 0.28), 0 0 28px rgba(76,201,240,0.07), inset 0 1px 0 rgba(255,255,255,0.14);
             }
             .glass-card p, .glass-card span, .glass-card strong {
                 color: var(--text-main);
@@ -130,10 +255,15 @@ def apply_theme() -> None:
             .spotlight-card {
                 padding: 1.15rem 1.2rem;
                 border-radius: var(--radius-lg);
-                background: linear-gradient(135deg, rgba(76, 201, 240, 0.14) 0%, rgba(255, 107, 107, 0.08) 100%);
-                border: 1px solid rgba(255, 255, 255, 0.12);
+                background: linear-gradient(135deg, rgba(76, 201, 240, 0.16) 0%, rgba(255, 107, 107, 0.09) 100%);
+                border: 1px solid rgba(76, 201, 240, 0.18);
                 color: var(--text-main);
-                box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+                box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255,255,255,0.10);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            .spotlight-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 26px 56px rgba(0, 0, 0, 0.28), 0 0 30px rgba(76,201,240,0.12);
             }
             .pill {
                 display: inline-block;
@@ -145,15 +275,26 @@ def apply_theme() -> None:
                 font-size: 0.78rem;
                 margin-right: 0.4rem;
                 margin-bottom: 0.35rem;
+                transition: background 0.2s ease, border-color 0.2s ease;
+            }
+            .pill:hover {
+                background: rgba(76, 201, 240, 0.12);
+                border-color: rgba(76, 201, 240, 0.30);
             }
             .feature-grid-card {
                 padding: 1.1rem;
                 border-radius: var(--radius-lg);
-                background: rgba(255, 255, 255, 0.05);
-                border: 1px solid rgba(255, 255, 255, 0.10);
+                background: linear-gradient(145deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 100%);
+                border: 1px solid rgba(255, 255, 255, 0.09);
                 color: var(--text-main);
                 min-height: 180px;
-                box-shadow: 0 16px 35px rgba(0, 0, 0, 0.16);
+                box-shadow: 0 16px 40px rgba(0, 0, 0, 0.20), inset 0 1px 0 rgba(255,255,255,0.08);
+                transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+                will-change: transform;
+            }
+            .feature-grid-card:hover {
+                transform: perspective(700px) rotateX(-2deg) translateY(-5px);
+                box-shadow: 0 28px 56px rgba(0, 0, 0, 0.30), 0 0 24px rgba(76,201,240,0.08);
             }
             .category-accent {
                 font-size: 0.78rem;
@@ -209,67 +350,129 @@ def apply_theme() -> None:
             .hero-title {
                 letter-spacing: -0.03em;
             }
-            /* Mobile navigation hint — hidden on desktop */
-            .mobile-nav-hint {
-                display: none;
-            }
-            /* Mobile bottom nav bar — hidden on desktop */
-            .mobile-bottom-nav {
-                display: none;
-            }
-            @media (max-width: 768px) {
-                /* Fixed bottom nav bar */
-                .mobile-bottom-nav {
-                    display: flex !important;
-                    position: fixed !important;
-                    bottom: 0 !important;
-                    left: 0 !important;
-                    right: 0 !important;
-                    z-index: 99998 !important;
-                    background: rgba(10, 16, 26, 0.97) !important;
-                    border-top: 1px solid rgba(255, 255, 255, 0.10) !important;
-                    padding: 0.4rem 0.5rem calc(0.4rem + env(safe-area-inset-bottom)) !important;
-                    gap: 0.25rem !important;
-                    backdrop-filter: blur(16px) !important;
-                    -webkit-backdrop-filter: blur(16px) !important;
-                }
-                .mob-nav-item {
-                    flex: 1 !important;
-                    text-align: center !important;
-                    padding: 0.5rem 0.2rem !important;
-                    color: rgba(247, 247, 245, 0.55) !important;
-                    text-decoration: none !important;
-                    font-size: 0.70rem !important;
-                    border-radius: 10px !important;
-                    border: 1px solid transparent !important;
-                    display: flex !important;
-                    flex-direction: column !important;
-                    align-items: center !important;
-                    gap: 0.15rem !important;
-                    transition: all 0.15s ease !important;
-                    -webkit-tap-highlight-color: transparent !important;
-                }
-                .mob-nav-active {
-                    background: rgba(76, 201, 240, 0.14) !important;
-                    border-color: rgba(76, 201, 240, 0.35) !important;
-                    color: #4cc9f0 !important;
-                }
-                .mob-nav-icon {
-                    font-size: 1.3rem !important;
-                    display: block !important;
-                    line-height: 1 !important;
-                }
-                /* Padding so content isn't hidden behind bottom nav */
-                .block-container {
-                    padding-bottom: 5.5rem !important;
-                }
-            }
-            /* Hide Streamlit's native sidebar toggle globally — replaced by #ml-hamburger */
-            [data-testid="stSidebarCollapsedControl"] {
+            /* Sidebar: hidden on Home/About, shown on Algorithms via JS class */
+            html:not(.ml-algo-page) [data-testid="stSidebar"],
+            [data-testid="stSidebarCollapsedControl"],
+            [data-testid="stSidebarCollapseButton"] {
                 display: none !important;
             }
+            html.ml-algo-page [data-testid="stSidebar"],
+            html.ml-algo-page [data-testid="stSidebar"][aria-expanded="false"],
+            html.ml-algo-page [data-testid="stSidebar"][aria-expanded="true"] {
+                display: flex !important;
+                transform: translateX(0) !important;
+                visibility: visible !important;
+            }
+            /* Bottom nav — full-width bar, items centered/grouped, raised Algorithms center */
+            .bottom-nav {
+                display: flex !important;
+                position: fixed !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                width: 100% !important;
+                z-index: 99998 !important;
+                background: rgba(255, 255, 255, 0.97) !important;
+                border-top: 1px solid rgba(0, 0, 0, 0.07) !important;
+                border-radius: 0 !important;
+                padding: 0.25rem 0 calc(0.25rem + env(safe-area-inset-bottom)) !important;
+                gap: 0 !important;
+                min-width: unset !important;
+                max-width: unset !important;
+                transform: none !important;
+                backdrop-filter: blur(24px) !important;
+                -webkit-backdrop-filter: blur(24px) !important;
+                box-shadow: 0 -1px 0 rgba(0,0,0,0.06), 0 -4px 20px rgba(0,0,0,0.05) !important;
+                align-items: flex-end !important;
+                justify-content: center !important;
+                gap: 2.5rem !important;
+            }
+            html[data-theme="dark"] .bottom-nav {
+                background: rgba(10, 13, 22, 0.97) !important;
+                border-top-color: rgba(255, 255, 255, 0.07) !important;
+                box-shadow: 0 -1px 0 rgba(255,255,255,0.07), 0 -4px 20px rgba(0,0,0,0.35) !important;
+            }
+            /* Side nav items */
+            .nav-item {
+                flex: 0 0 auto !important;
+                text-align: center !important;
+                padding: 0.55rem 1.1rem !important;
+                color: rgba(247, 247, 245, 0.55) !important;
+                text-decoration: none !important;
+                font-size: 0.80rem !important;
+                font-weight: 500 !important;
+                border-radius: 10px !important;
+                border: none !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 0.2rem !important;
+                transition: all 0.18s ease !important;
+                -webkit-tap-highlight-color: transparent !important;
+                white-space: nowrap !important;
+                min-width: 70px !important;
+            }
+            html[data-theme="light"] .nav-item { color: rgba(26, 31, 46, 0.52) !important; }
+            .nav-item-active { color: #4cc9f0 !important; font-weight: 600 !important; }
+            html[data-theme="light"] .nav-item-active { color: #0ea5e9 !important; }
+            /* Center raised Algorithms — Split Karo Quick style */
+            .nav-item-center {
+                position: relative !important;
+                top: -16px !important;
+                flex: 0 0 auto !important;
+                background: none !important;
+                border-radius: 0 !important;
+                width: auto !important;
+                height: auto !important;
+                padding: 0 !important;
+                gap: 3px !important;
+                color: #4cc9f0 !important;
+                font-size: 0.65rem !important;
+                font-weight: 600 !important;
+                box-shadow: none !important;
+                border: none !important;
+                align-items: center !important;
+            }
+            html[data-theme="light"] .nav-item-center { color: #0ea5e9 !important; }
+            /* The actual circle */
+            .algo-circle {
+                width: 64px !important;
+                height: 64px !important;
+                border-radius: 50% !important;
+                background: linear-gradient(135deg, #4cc9f0 0%, #6366f1 100%) !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                box-shadow: 0 6px 24px rgba(76,201,240,0.45), 0 2px 8px rgba(0,0,0,0.25) !important;
+                border: 3px solid rgba(10, 16, 26, 0.95) !important;
+                transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease !important;
+            }
+            html[data-theme="light"] .algo-circle {
+                background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%) !important;
+                border-color: rgba(240, 244, 249, 0.97) !important;
+                box-shadow: 0 6px 24px rgba(14,165,233,0.45), 0 2px 8px rgba(0,0,0,0.15) !important;
+            }
+            .nav-item-center.nav-item-active .algo-circle {
+                transform: translateY(-2px) scale(1.08) !important;
+                box-shadow: 0 10px 32px rgba(76,201,240,0.65) !important;
+            }
+            .nav-icon {
+                font-size: 1.45rem !important;
+                display: block !important;
+                line-height: 1 !important;
+            }
+            .algo-circle .nav-icon {
+                font-size: 1.7rem !important;
+                color: white !important;
+            }
+            .nav-label { display: block !important; font-size: 0.80rem !important; }
+            .nav-item-center .nav-label { font-size: 0.72rem !important; }
+            /* Ensure content doesn't hide behind bottom nav */
+            .block-container {
+                padding-bottom: 5.5rem !important;
+            }
+            /* Mobile: stack columns, tighten padding */
             @media (max-width: 768px) {
-                /* Stack multi-column layouts vertically on mobile */
                 [data-testid="stHorizontalBlock"] {
                     flex-wrap: wrap !important;
                     gap: 0.5rem !important;
@@ -280,14 +483,12 @@ def apply_theme() -> None:
                     width: 100% !important;
                     flex: 1 1 100% !important;
                 }
-                /* Content padding — leave room at top for fixed toggle */
                 .block-container {
-                    padding-top: 3.5rem !important;
+                    padding-top: 1.25rem !important;
                     padding-left: 0.75rem !important;
                     padding-right: 0.75rem !important;
                     max-width: 100vw !important;
                 }
-                /* Cards */
                 .hero-card,
                 .glass-card,
                 .section-card,
@@ -302,35 +503,6 @@ def apply_theme() -> None:
                 .hero-title {
                     font-size: 1.55rem !important;
                     line-height: 1.3 !important;
-                }
-                [data-testid="stSidebar"] {
-                    min-width: 280px !important;
-                    max-width: 88vw !important;
-                }
-                /* Mobile nav hint visible */
-                .mobile-nav-hint {
-                    display: block !important;
-                    background: rgba(76, 201, 240, 0.10);
-                    border: 1px solid rgba(76, 201, 240, 0.28);
-                    border-radius: 10px;
-                    padding: 0.55rem 0.9rem 0.55rem 3.8rem;
-                    margin-bottom: 1rem;
-                    font-size: 0.85rem;
-                    color: rgba(247,247,245,0.80);
-                }
-            }
-            /* Tablet — between 769 and 900px, only pad content */
-            @media (min-width: 769px) and (max-width: 900px) {
-                .block-container {
-                    padding-top: 1rem;
-                    padding-left: 1rem;
-                    padding-right: 1rem;
-                }
-                .hero-card,
-                .glass-card,
-                .section-card,
-                .spotlight-card {
-                    padding: 1rem;
                 }
             }
             @media (pointer: fine) {
@@ -472,283 +644,154 @@ def apply_theme() -> None:
         }
         canonical.setAttribute('href', __HUGGING_FACE_URL__);
 
-        // Inject dark background into parent document head as early as possible.
-        // This persists across Streamlit re-renders (sidebar nav) because the style tag
-        // stays in parentDoc.head until a full page reload.
+        // Dark is always the default on fresh page loads.
+        // sessionStorage resets when the tab closes, so dark restores on new visits.
+        const initTheme = () => {
+          const saved = sessionStorage.getItem('ml-viz-theme') || 'dark';
+          window.parent.document.documentElement.setAttribute('data-theme', saved);
+        };
+        initTheme();
+
+        // Persist base CSS in <head> — survives Streamlit React rerenders.
         const injectAntiFlashCSS = () => {
           const parentDoc = window.parent.document;
           if (parentDoc.getElementById('ml-af-styles')) return;
           const style = parentDoc.createElement('style');
           style.id = 'ml-af-styles';
           style.textContent = `
-            html, body, #root { background-color: #0a101a !important; color-scheme: dark; }
-            [data-testid="stSidebarCollapsedControl"] { display: none !important; }
-            [data-testid="stSkeleton"] > div {
-              background-color: rgba(255,255,255,0.07) !important;
-              background-image: linear-gradient(90deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.10) 50%, rgba(255,255,255,0.04) 100%) !important;
+            html, body, #root { background-color: #0a101a; color-scheme: dark; }
+            html[data-theme="light"], html[data-theme="light"] body, html[data-theme="light"] #root {
+              background-color: #f0f4f9 !important; color-scheme: light;
             }
+            html[data-theme="light"] h1, html[data-theme="light"] h2, html[data-theme="light"] h3,
+            html[data-theme="light"] p, html[data-theme="light"] li, html[data-theme="light"] span,
+            html[data-theme="light"] label, html[data-theme="light"] div,
+            html[data-theme="light"] .stMarkdown *, html[data-theme="light"] [data-testid="stMarkdownContainer"] * {
+              color: #1a1f2e !important;
+            }
+            html[data-theme="light"] [data-testid="stSidebar"] * { color: #1a1f2e !important; }
+            html[data-theme="light"] [data-baseweb="select"] > div,
+            html[data-theme="light"] [data-baseweb="input"] > div,
+            html[data-theme="light"] input { background: white !important; color: #1a1f2e !important; border-color: rgba(0,0,0,0.15) !important; }
+            html[data-theme="light"] input::placeholder { color: rgba(26,31,46,0.40) !important; opacity: 1 !important; }
+            html[data-theme="light"] [data-baseweb="popover"],
+            html[data-theme="light"] [data-baseweb="menu"],
+            html[data-theme="light"] [role="listbox"] { background: white !important; }
+            html[data-theme="light"] [role="option"],
+            html[data-theme="light"] [data-baseweb="menu"] li { background: white !important; color: #1a1f2e !important; }
+            html[data-theme="light"] [role="option"]:hover,
+            html[data-theme="light"] [role="option"][aria-selected="true"] { background: rgba(14,165,233,0.10) !important; color: #0ea5e9 !important; }
+            [data-testid="stSidebarCollapsedControl"],
+            [data-testid="stSidebarCollapseButton"] { display: none !important; }
+            html:not(.ml-algo-page) [data-testid="stSidebar"] { display: none !important; }
+            html.ml-algo-page [data-testid="stSidebar"] { display: flex !important; }
             [data-stale="true"] { opacity: 0.55 !important; transition: opacity 0.12s ease !important; }
           `;
           parentDoc.head.appendChild(style);
         };
         injectAntiFlashCSS();
 
-        // Inject mobile CSS directly into the parent Streamlit document
-        const injectMobileCSS = () => {
-          const parentDoc = window.parent.document;
-          if (parentDoc.getElementById('ml-mobile-styles')) return;
-          const style = parentDoc.createElement('style');
-          style.id = 'ml-mobile-styles';
-          style.textContent = `
-            @media (max-width: 768px) {
-              [data-testid="stHorizontalBlock"] {
-                flex-wrap: wrap !important;
-                gap: 0.5rem !important;
-              }
-              [data-testid="stColumn"],
-              [data-testid="column"] {
-                min-width: 100% !important;
-                width: 100% !important;
-                flex: 1 1 100% !important;
-              }
-              .block-container {
-                padding-top: 3.5rem !important;
-                padding-left: 0.75rem !important;
-                padding-right: 0.75rem !important;
-                padding-bottom: 5.5rem !important;
-                max-width: 100vw !important;
-              }
-              .mobile-bottom-nav {
-                display: flex !important;
-                position: fixed !important;
-                bottom: 0 !important;
-                left: 0 !important;
-                right: 0 !important;
-                z-index: 99998 !important;
-                background: rgba(10,16,26,0.97) !important;
-                border-top: 1px solid rgba(255,255,255,0.10) !important;
-                padding: 0.4rem 0.5rem calc(0.4rem + env(safe-area-inset-bottom)) !important;
-                gap: 0.25rem !important;
-                backdrop-filter: blur(16px) !important;
-              }
-              .mob-nav-item {
-                flex: 1 !important;
-                text-align: center !important;
-                padding: 0.5rem 0.2rem !important;
-                color: rgba(247,247,245,0.55) !important;
-                text-decoration: none !important;
-                font-size: 0.70rem !important;
-                border-radius: 10px !important;
-                border: 1px solid transparent !important;
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                gap: 0.15rem !important;
-              }
-              .mob-nav-active {
-                background: rgba(76,201,240,0.14) !important;
-                border-color: rgba(76,201,240,0.35) !important;
-                color: #4cc9f0 !important;
-              }
-              .mob-nav-icon {
-                font-size: 1.3rem !important;
-                display: block !important;
-                line-height: 1 !important;
-              }
+        // Add ml-algo-page class to <html> when on Algorithms page — triggers sidebar CSS.
+        // Also force sidebar visible inline (belt-and-suspenders against Streamlit's transform).
+        const updatePageClass = () => {
+          const nav = new URLSearchParams(window.parent.location.search).get('nav') || 'Home';
+          const html = window.parent.document.documentElement;
+          const isAlgo = nav === 'Algorithms';
+          html.classList.toggle('ml-algo-page', isAlgo);
+          if (isAlgo) {
+            const sb = window.parent.document.querySelector('[data-testid="stSidebar"]');
+            if (sb) {
+              sb.style.setProperty('display', 'flex', 'important');
+              sb.style.setProperty('transform', 'translateX(0)', 'important');
+              sb.style.setProperty('visibility', 'visible', 'important');
             }
-          `;
-          parentDoc.head.appendChild(style);
-        };
-
-        injectMobileCSS();
-
-        // Inject desktop sticky-sidebar CSS into parent doc <head>.
-        // A <style> tag in <head> survives Streamlit React rerenders (React only controls
-        // the body content, not <head>). This is more reliable than JS inline styles,
-        // which React resets on each rerender cycle.
-        const injectDesktopSidebar = () => {
-          const parentDoc = window.parent.document;
-          const css = `
-            @media (min-width: 769px) {
-              [data-testid="stSidebar"][aria-expanded="false"],
-              [data-testid="stSidebar"][aria-expanded="true"],
-              [data-testid="stSidebar"] {
-                transform: translateX(0) !important;
-                display: block !important;
-                visibility: visible !important;
-              }
-              [data-testid="stSidebarCollapseButton"] {
-                display: none !important;
-              }
-            }
-          `;
-          let style = parentDoc.getElementById('ml-desktop-sb');
-          if (!style) {
-            style = parentDoc.createElement('style');
-            style.id = 'ml-desktop-sb';
-            parentDoc.head.appendChild(style);
           }
-          if (style.textContent !== css) style.textContent = css;
         };
-        injectDesktopSidebar();
+        updatePageClass();
+        setInterval(updatePageClass, 400);
 
-        // Inject mobile bottom nav into parent body (outside React) using plain anchor tags.
-        // target="_self" keeps navigation in the same tab; browser handles the click,
-        // so no sandbox restriction applies (only JS-initiated navigation is blocked).
-        const updateMobileNav = () => {
+        // Pill toggle switch (light/dark) — top-right, styled like Split Karo reference.
+        const injectThemeToggle = () => {
+          const parentDoc = window.parent.document;
+          if (parentDoc.getElementById('ml-toggle-wrap')) return;
+          const isDark = () => (parentDoc.documentElement.getAttribute('data-theme') || 'dark') !== 'light';
+
+          const wrap = parentDoc.createElement('div');
+          wrap.id = 'ml-toggle-wrap';
+          Object.assign(wrap.style, {
+            position: 'fixed', top: '0.65rem', right: '0.75rem',
+            zIndex: '999999', display: 'flex', alignItems: 'center', gap: '6px',
+          });
+
+          const track = parentDoc.createElement('div');
+          track.id = 'ml-theme-btn';
+          Object.assign(track.style, {
+            width: '48px', height: '26px', borderRadius: '13px',
+            cursor: 'pointer', position: 'relative',
+            transition: 'background 0.3s ease',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+            flexShrink: '0',
+          });
+
+          const thumb = parentDoc.createElement('div');
+          Object.assign(thumb.style, {
+            position: 'absolute', top: '3px',
+            width: '20px', height: '20px', borderRadius: '50%',
+            background: 'white',
+            boxShadow: '0 1px 4px rgba(0,0,0,0.25)',
+            transition: 'left 0.25s ease',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: '11px', lineHeight: '1',
+          });
+
+          const updateToggle = () => {
+            const dark = isDark();
+            track.style.background = dark ? '#6c63ff' : '#e0e0e0';
+            thumb.style.left = dark ? '25px' : '3px';
+            thumb.textContent = dark ? '🌙' : '☀️';
+          };
+
+          track.onclick = () => {
+            const next = isDark() ? 'light' : 'dark';
+            parentDoc.documentElement.setAttribute('data-theme', next);
+            sessionStorage.setItem('ml-viz-theme', next);
+            updateToggle();
+          };
+
+          track.appendChild(thumb);
+          wrap.appendChild(track);
+          parentDoc.body.appendChild(wrap);
+          updateToggle();
+        };
+        injectThemeToggle();
+
+        // Bottom nav — Algorithms center has icon-only circle + label below (Split Karo Quick style).
+        const updateBottomNav = () => {
           const parentDoc = window.parent.document;
           const currentNav = new URLSearchParams(window.parent.location.search).get('nav') || 'Home';
-          let nav = parentDoc.getElementById('ml-mobile-nav');
+          let nav = parentDoc.getElementById('ml-bottom-nav');
           if (!nav) {
             nav = parentDoc.createElement('div');
-            nav.id = 'ml-mobile-nav';
-            nav.className = 'mobile-bottom-nav';
+            nav.id = 'ml-bottom-nav';
+            nav.className = 'bottom-nav';
             const items = [['🏠', 'Home'], ['⚡', 'Algorithms'], ['👤', 'About']];
-            nav.innerHTML = items.map(([icon, label]) =>
-              '<a href="?nav=' + label + '" target="_self" data-nav="' + label + '" class="mob-nav-item">' +
-              '<span class="mob-nav-icon">' + icon + '</span><span>' + label + '</span></a>'
-            ).join('');
+            nav.innerHTML = items.map(([icon, label]) => {
+              if (label === 'Algorithms') {
+                // Icon in circle, label separate below — Split Karo Quick style
+                return '<a href="?nav=' + label + '" target="_self" data-nav="' + label + '" class="nav-item nav-item-center">' +
+                  '<div class="algo-circle"><span class="nav-icon">' + icon + '</span></div>' +
+                  '<span class="nav-label">' + label + '</span></a>';
+              }
+              return '<a href="?nav=' + label + '" target="_self" data-nav="' + label + '" class="nav-item">' +
+                '<span class="nav-icon">' + icon + '</span><span class="nav-label">' + label + '</span></a>';
+            }).join('');
             parentDoc.body.appendChild(nav);
           }
-          nav.querySelectorAll('.mob-nav-item').forEach(el => {
-            el.classList.toggle('mob-nav-active', el.getAttribute('data-nav') === currentNav);
+          nav.querySelectorAll('.nav-item').forEach(el => {
+            el.classList.toggle('nav-item-active', el.getAttribute('data-nav') === currentNav);
           });
         };
-        updateMobileNav();
-
-        // Direct CSS sidebar control — bypasses Streamlit's React event system entirely.
-        // On HF, sidebar always starts collapsed (no localStorage). Clicking Streamlit's
-        // internal button fails because it lives inside display:none stHeader. Instead we
-        // directly set/remove the sidebar's transform to show or hide it, and sync state
-        // via a backdrop overlay that closes it on outside click.
-        let mlForcedOpen = false;
-
-        const mlCloseSidebar = () => {
-          const pDoc = window.parent.document;
-          const sb = pDoc.querySelector('[data-testid="stSidebar"]');
-          if (sb) {
-            sb.style.removeProperty('transform');
-            sb.style.removeProperty('left');
-            sb.style.removeProperty('visibility');
-            sb.style.removeProperty('z-index');
-          }
-          const ov = pDoc.getElementById('ml-sb-overlay');
-          if (ov) ov.style.display = 'none';
-          mlForcedOpen = false;
-        };
-
-        const mlOpenSidebar = () => {
-          const pDoc = window.parent.document;
-          const sb = pDoc.querySelector('[data-testid="stSidebar"]');
-          if (!sb) return;
-          sb.style.setProperty('transform', 'translateX(0)', 'important');
-          sb.style.setProperty('left', '0', 'important');
-          sb.style.setProperty('visibility', 'visible', 'important');
-          sb.style.setProperty('z-index', '99999', 'important');
-          mlForcedOpen = true;
-          let ov = pDoc.getElementById('ml-sb-overlay');
-          if (!ov) {
-            ov = pDoc.createElement('div');
-            ov.id = 'ml-sb-overlay';
-            Object.assign(ov.style, {
-              position: 'fixed', top: '0', left: '0', right: '0', bottom: '0',
-              zIndex: '99997', background: 'rgba(0,0,0,0.45)',
-            });
-            ov.addEventListener('click', mlCloseSidebar);
-            pDoc.body.appendChild(ov);
-          }
-          ov.style.display = 'block';
-        };
-
-        const ensureMobileHamburger = () => {
-          const parentDoc = window.parent.document;
-          const sidebar = parentDoc.querySelector('[data-testid="stSidebar"]');
-          const isMobile = window.parent.innerWidth <= 768;
-
-          if (!isMobile) {
-            // Desktop: CSS (ml-desktop-sb in <head>) handles sidebar visibility.
-            // Just ensure hamburger and overlay are hidden.
-            const existingBtn = parentDoc.getElementById('ml-hamburger');
-            if (existingBtn) existingBtn.style.display = 'none';
-            const ov = parentDoc.getElementById('ml-sb-overlay');
-            if (ov) ov.style.display = 'none';
-            if (sidebar) sidebar.style.removeProperty('z-index');
-            return;
-          }
-
-          // Mobile: hamburger toggle
-          let btn = parentDoc.getElementById('ml-hamburger');
-          if (!btn) {
-            btn = parentDoc.createElement('button');
-            btn.id = 'ml-hamburger';
-            btn.setAttribute('aria-label', 'Open navigation');
-            btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 20 20" fill="#4cc9f0"><rect y="2" width="20" height="2.5" rx="1.25"/><rect y="8.75" width="20" height="2.5" rx="1.25"/><rect y="15.5" width="20" height="2.5" rx="1.25"/></svg>';
-            Object.assign(btn.style, {
-              position: 'fixed', top: '0.5rem', left: '0.5rem',
-              zIndex: '999999',
-              background: 'rgba(76,201,240,0.18)',
-              border: '1.5px solid rgba(76,201,240,0.55)',
-              borderRadius: '12px',
-              width: '44px', height: '44px',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer',
-              backdropFilter: 'blur(8px)',
-              boxShadow: '0 4px 20px rgba(0,0,0,0.32)',
-              WebkitTapHighlightColor: 'transparent',
-            });
-            btn.addEventListener('click', mlOpenSidebar);
-            parentDoc.body.appendChild(btn);
-          }
-          // Show hamburger only when sidebar is off-screen (collapsed)
-          if (!sidebar) { btn.style.display = 'flex'; return; }
-          const rect = sidebar.getBoundingClientRect();
-          btn.style.display = rect.left > -50 ? 'none' : 'flex';
-        };
-        setInterval(ensureMobileHamburger, 200);
-
-        // Close sidebar on mobile only when a nav radio is clicked.
-        const setupSidebarAutoCollapse = () => {
-          const parentDoc = window.parent.document;
-          const sidebar = parentDoc.querySelector('[data-testid="stSidebar"]');
-          if (!sidebar) return;
-          if (sidebar.dataset.collapseSetup === '1') return;
-          sidebar.dataset.collapseSetup = '1';
-          sidebar.addEventListener('click', (e) => {
-            if (!e.target.closest('[data-testid="stRadio"]')) return;
-            if (window.parent.innerWidth <= 768) setTimeout(mlCloseSidebar, 300);
-          });
-        };
-        setInterval(setupSidebarAutoCollapse, 500);
-
-        // Intercept Streamlit's native < collapse button inside the sidebar on mobile.
-        // Our CSS override (visibility !important) prevents React from hiding the sidebar,
-        // so we must call mlCloseSidebar ourselves to remove the override first.
-        const setupMobileCloseButton = () => {
-          const parentDoc = window.parent.document;
-          const closeBtn = parentDoc.querySelector('[data-testid="stSidebarCollapseButton"]');
-          if (!closeBtn || closeBtn.dataset.mlClose === '1') return;
-          closeBtn.dataset.mlClose = '1';
-          closeBtn.addEventListener('click', () => {
-            if (window.parent.innerWidth <= 768) mlCloseSidebar();
-          }, true);
-        };
-        setInterval(setupMobileCloseButton, 500);
-
-        // Fix two-click navigation: the components.html iframe can steal window focus,
-        // so the first click on a sidebar radio item focuses the parent window and the
-        // second click actually registers. Calling window.parent.focus() on mousedown
-        // (before click fires) ensures the parent is focused and the click registers once.
-        const fixRadioSingleClick = () => {
-          const parentDoc = window.parent.document;
-          parentDoc.querySelectorAll('[data-testid="stSidebar"] [data-testid="stRadio"] label').forEach(label => {
-            if (label.dataset.sc === '1') return;
-            label.dataset.sc = '1';
-            label.addEventListener('mousedown', () => {
-              try { window.parent.focus(); } catch(e) {}
-            }, true);
-          });
-        };
-        setInterval(fixRadioSingleClick, 800);
+        updateBottomNav();
 
         // Style Category selector (gold) and Algorithm selector (cyan) so they look distinct.
         const styleNavSelectors = () => {
