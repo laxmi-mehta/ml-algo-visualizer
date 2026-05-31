@@ -350,18 +350,32 @@ def apply_theme() -> None:
             .hero-title {
                 letter-spacing: -0.03em;
             }
-            /* Sidebar: hidden on Home/About, shown on Algorithms via JS class */
-            html:not(.ml-algo-page) [data-testid="stSidebar"],
+            /* Sidebar: hidden on Home/About + always on mobile; shown on Algorithms desktop */
             [data-testid="stSidebarCollapsedControl"],
-            [data-testid="stSidebarCollapseButton"] {
-                display: none !important;
-            }
+            [data-testid="stSidebarCollapseButton"] { display: none !important; }
+            /* Hide sidebar on non-Algo pages */
+            html:not(.ml-algo-page) [data-testid="stSidebar"] { display: none !important; }
+            /* Show sidebar on Algorithms page — desktop only */
             html.ml-algo-page [data-testid="stSidebar"],
             html.ml-algo-page [data-testid="stSidebar"][aria-expanded="false"],
             html.ml-algo-page [data-testid="stSidebar"][aria-expanded="true"] {
                 display: flex !important;
                 transform: translateX(0) !important;
                 visibility: visible !important;
+                min-width: 244px !important;
+                max-width: 300px !important;
+                width: 21rem !important;
+                flex-shrink: 0 !important;
+                position: relative !important;
+            }
+            /* On mobile: always hide the sidebar — use inline selectors instead */
+            @media (max-width: 768px) {
+                html.ml-algo-page [data-testid="stSidebar"],
+                html.ml-algo-page [data-testid="stSidebar"][aria-expanded="false"],
+                html.ml-algo-page [data-testid="stSidebar"][aria-expanded="true"] {
+                    display: none !important;
+                    transform: translateX(-100%) !important;
+                }
             }
             /* Bottom nav — full-width bar, items centered/grouped, raised Algorithms center */
             .bottom-nav {
@@ -695,18 +709,28 @@ def apply_theme() -> None:
         injectAntiFlashCSS();
 
         // Add ml-algo-page class to <html> when on Algorithms page — triggers sidebar CSS.
-        // Also force sidebar visible inline (belt-and-suspenders against Streamlit's transform).
+        // Force sidebar inline only on desktop (CSS @media handles mobile hide).
         const updatePageClass = () => {
           const nav = new URLSearchParams(window.parent.location.search).get('nav') || 'Home';
           const html = window.parent.document.documentElement;
           const isAlgo = nav === 'Algorithms';
           html.classList.toggle('ml-algo-page', isAlgo);
-          if (isAlgo) {
+          // Belt-and-suspenders: force sidebar inline styles on desktop only
+          if (isAlgo && window.parent.innerWidth >= 769) {
             const sb = window.parent.document.querySelector('[data-testid="stSidebar"]');
             if (sb) {
               sb.style.setProperty('display', 'flex', 'important');
               sb.style.setProperty('transform', 'translateX(0)', 'important');
               sb.style.setProperty('visibility', 'visible', 'important');
+              sb.style.setProperty('width', '21rem', 'important');
+              sb.style.setProperty('min-width', '244px', 'important');
+              sb.style.setProperty('position', 'relative', 'important');
+            }
+          } else if (isAlgo && window.parent.innerWidth < 769) {
+            // Ensure sidebar is hidden on mobile even if Streamlit expands it
+            const sb = window.parent.document.querySelector('[data-testid="stSidebar"]');
+            if (sb) {
+              sb.style.setProperty('display', 'none', 'important');
             }
           }
         };
