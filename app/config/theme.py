@@ -443,30 +443,33 @@ def apply_theme() -> None:
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
-                box-shadow: 0 6px 24px rgba(76,201,240,0.45), 0 2px 8px rgba(0,0,0,0.25) !important;
+                box-shadow: 0 4px 16px rgba(76,201,240,0.25), 0 2px 8px rgba(0,0,0,0.20) !important;
                 border: 3px solid rgba(10, 16, 26, 0.95) !important;
                 transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease !important;
             }
             html[data-theme="light"] .algo-circle {
                 background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%) !important;
                 border-color: rgba(240, 244, 249, 0.97) !important;
-                box-shadow: 0 6px 24px rgba(14,165,233,0.45), 0 2px 8px rgba(0,0,0,0.15) !important;
+                box-shadow: 0 4px 16px rgba(14,165,233,0.25), 0 2px 8px rgba(0,0,0,0.12) !important;
             }
             .nav-item-center.nav-item-active .algo-circle {
                 transform: translateY(-2px) scale(1.08) !important;
-                box-shadow: 0 10px 32px rgba(76,201,240,0.65) !important;
+                box-shadow: 0 8px 24px rgba(76,201,240,0.35) !important;
             }
             .nav-icon {
-                font-size: 1.45rem !important;
+                font-size: 1.65rem !important;
                 display: block !important;
                 line-height: 1 !important;
             }
             .algo-circle .nav-icon {
-                font-size: 1.7rem !important;
+                font-size: 1.95rem !important;
                 color: white !important;
             }
-            .nav-label { display: block !important; font-size: 0.80rem !important; }
-            .nav-item-center .nav-label { font-size: 0.72rem !important; }
+            .nav-label { display: block !important; font-size: 0.88rem !important; }
+            .nav-item-center .nav-label { font-size: 0.80rem !important; }
+            /* Mobile inline algo selectors — hidden by default, shown on mobile via JS class */
+            .ml-mobile-selectors { display: none !important; }
+            html.ml-is-mobile .ml-mobile-selectors { display: block !important; padding: 0.75rem 1rem 0.5rem 1rem !important; }
             /* Ensure content doesn't hide behind bottom nav */
             .block-container {
                 padding-bottom: 5.5rem !important;
@@ -707,8 +710,38 @@ def apply_theme() -> None:
             }
           }
         };
+        // Mobile detection: toggle html.ml-is-mobile and label the mobile selector container
+        const detectMobile = () => {
+          const parentDoc = window.parent.document;
+          const isMobile = window.parent.innerWidth < 769;
+          parentDoc.documentElement.classList.toggle('ml-is-mobile', isMobile);
+          // Find the marker injected inside the mobile selectors container and add CSS class
+          const marker = parentDoc.getElementById('ml-mob-sel-marker');
+          if (marker) {
+            const container = marker.closest('[data-testid="stVerticalBlock"]');
+            if (container && !container.classList.contains('ml-mobile-selectors')) {
+              container.classList.add('ml-mobile-selectors');
+            }
+          }
+        };
+        detectMobile();
+        window.parent.addEventListener('resize', detectMobile);
+
+        // Re-apply ml-mobile-selectors class immediately whenever Streamlit rerenders
+        // (React reconciliation removes custom classes; MutationObserver catches it instantly)
+        const mobSelObs = new MutationObserver(() => {
+          const marker = window.parent.document.getElementById('ml-mob-sel-marker');
+          if (marker) {
+            const container = marker.closest('[data-testid="stVerticalBlock"]');
+            if (container && !container.classList.contains('ml-mobile-selectors')) {
+              container.classList.add('ml-mobile-selectors');
+            }
+          }
+        });
+        mobSelObs.observe(window.parent.document.body, { childList: true, subtree: true });
+
         updatePageClass();
-        setInterval(updatePageClass, 400);
+        setInterval(() => { updatePageClass(); detectMobile(); }, 400);
 
         // Pill toggle switch (light/dark) — top-right, styled like Split Karo reference.
         const injectThemeToggle = () => {
@@ -774,7 +807,7 @@ def apply_theme() -> None:
             nav = parentDoc.createElement('div');
             nav.id = 'ml-bottom-nav';
             nav.className = 'bottom-nav';
-            const items = [['🏠', 'Home'], ['⚡', 'Algorithms'], ['👤', 'About']];
+            const items = [['🏠', 'Home'], ['🧠', 'Algorithms'], ['👤', 'About']];
             nav.innerHTML = items.map(([icon, label]) => {
               if (label === 'Algorithms') {
                 // Icon in circle, label separate below — Split Karo Quick style
@@ -829,6 +862,21 @@ def apply_theme() -> None:
 
         hideChrome();
         setInterval(hideChrome, 800);
+
+        // Fix dropdown option colors in light mode.
+        // Uses a passive interval (no MutationObserver / event listeners) so it never
+        // interferes with BaseWeb's own click / selection handling.
+        setInterval(() => {
+          const pd = window.parent.document;
+          if (pd.documentElement.getAttribute('data-theme') !== 'light') return;
+          const opts = pd.querySelectorAll('[role="option"]');
+          if (!opts.length) return;          // dropdown closed — nothing to do
+          opts.forEach(opt => {
+            const active = opt.getAttribute('aria-selected') === 'true' || opt.matches(':hover');
+            opt.style.setProperty('background-color', active ? 'rgba(14,165,233,0.12)' : '#ffffff', 'important');
+            opt.style.setProperty('color',            active ? '#0ea5e9'                : '#1a1f2e', 'important');
+          });
+        }, 50);
         </script>
     """
     metadata_script = (
