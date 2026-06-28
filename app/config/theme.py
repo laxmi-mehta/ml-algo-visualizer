@@ -641,16 +641,53 @@ def apply_theme() -> None:
           });
         };
 
-        ensureMetaTag('meta[name="description"]', 'name', __SEO_DESCRIPTION__);
-        ensureMetaTag('meta[name="keywords"]', 'name', __SEO_KEYWORDS__);
-        ensureMetaTag('meta[name="author"]', 'name', __APP_AUTHOR__);
-        ensureMetaTag('meta[property="og:title"]', 'property', __CANONICAL_NAME__);
+        ensureMetaTag('meta[name="description"]',        'name',     __SEO_DESCRIPTION__);
+        ensureMetaTag('meta[name="keywords"]',           'name',     __SEO_KEYWORDS__);
+        ensureMetaTag('meta[name="author"]',             'name',     __APP_AUTHOR__);
+        ensureMetaTag('meta[name="robots"]',             'name',     'index, follow');
+        ensureMetaTag('meta[property="og:title"]',       'property', __APP_TITLE__);
         ensureMetaTag('meta[property="og:description"]', 'property', __SEO_DESCRIPTION__);
-        ensureMetaTag('meta[property="og:url"]', 'property', __HUGGING_FACE_URL__);
-        ensureMetaTag('meta[property="og:type"]', 'property', 'website');
-        ensureMetaTag('meta[name="twitter:card"]', 'name', 'summary_large_image');
-        ensureMetaTag('meta[name="twitter:title"]', 'name', __CANONICAL_NAME__);
-        ensureMetaTag('meta[name="twitter:description"]', 'name', __SEO_DESCRIPTION__);
+        ensureMetaTag('meta[property="og:url"]',         'property', __HUGGING_FACE_URL__);
+        ensureMetaTag('meta[property="og:type"]',        'property', 'website');
+        ensureMetaTag('meta[property="og:site_name"]',   'property', __CANONICAL_NAME__);
+        ensureMetaTag('meta[property="og:locale"]',      'property', 'en_US');
+        ensureMetaTag('meta[name="twitter:card"]',       'name',     'summary_large_image');
+        ensureMetaTag('meta[name="twitter:title"]',      'name',     __APP_TITLE__);
+        ensureMetaTag('meta[name="twitter:description"]','name',     __SEO_DESCRIPTION__);
+        ensureMetaTag('meta[name="twitter:site"]',       'name',     '@laxmimehta');
+
+        // JSON-LD structured data — Googlebot reads this even with partial JS execution
+        const pd0 = window.parent.document;
+        if (!pd0.getElementById('ml-jsonld')) {
+          const schema = {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": __APP_TITLE__,
+            "url": __HUGGING_FACE_URL__,
+            "description": __SEO_DESCRIPTION__,
+            "applicationCategory": "EducationalApplication",
+            "operatingSystem": "Any",
+            "author": { "@type": "Person", "name": __APP_AUTHOR__ },
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+            "keywords": __SEO_KEYWORDS__,
+            "featureList": [
+              "Linear Regression Visualizer",
+              "Decision Tree Visualizer",
+              "K-Nearest Neighbors Visualizer",
+              "SVM Visualizer",
+              "PCA Visualizer",
+              "Clustering Algorithms",
+              "Real-time parameter tuning",
+              "Dark and light mode",
+              "Mobile responsive"
+            ]
+          };
+          const s = pd0.createElement('script');
+          s.id   = 'ml-jsonld';
+          s.type = 'application/ld+json';
+          s.text = JSON.stringify(schema);
+          pd0.head.appendChild(s);
+        }
 
         const parentDoc = window.parent.document;
         let canonical = parentDoc.querySelector('link[rel="canonical"]');

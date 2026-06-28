@@ -12,17 +12,27 @@ GITHUB_URL = "https://github.com/laxmi-mehta/ml-algo-visualizer"
 HUGGING_FACE_URL = "https://huggingface.co/spaces/laxmimehta/ml-algo-visualizer"
 PROJECT_CANONICAL_NAME = "ML Algorithm Visualizer"
 SEO_DESCRIPTION = (
-    "ML Algorithm Visualizer is an interactive machine learning dashboard built with Streamlit and Scikit-learn "
-    "for scikit-learn visualization, ML learning, and data science visualization."
+    "ML Algorithm Visualizer — free interactive tool to visualize and learn machine learning algorithms "
+    "including Linear Regression, Decision Tree, K-Nearest Neighbors, SVM, PCA, and Clustering. "
+    "Built with Python, Streamlit, and Scikit-learn. Explore ML concepts visually with real-time parameter tuning."
 )
 SEO_KEYWORDS = [
-    "Machine Learning Visualizer",
     "ML Algorithm Visualizer",
-    "Streamlit ML App",
-    "Interactive Machine Learning",
-    "Machine Learning Dashboard",
-    "Scikit-learn Visualization",
-    "Python ML Project",
-    "Data Science Visualization",
-    "ML Learning Platform",
+    "machine learning visualizer",
+    "interactive machine learning",
+    "visualize machine learning algorithms",
+    "learn machine learning visually",
+    "linear regression visualizer",
+    "decision tree visualizer",
+    "KNN visualizer",
+    "SVM visualizer",
+    "PCA visualization",
+    "clustering algorithm visualizer",
+    "scikit-learn visualization",
+    "Streamlit ML app",
+    "Python machine learning tutorial",
+    "ML for beginners",
+    "data science visualization tool",
+    "machine learning dashboard",
+    "ML concepts explained visually",
 ]
