@@ -887,6 +887,52 @@ def apply_theme() -> None:
         hideChrome();
         setInterval(hideChrome, 800);
 
+        // PWA: inject web app manifest + iOS meta tags into parent document head
+        const injectPWA = () => {
+          const pd = window.parent.document;
+          if (pd.getElementById('ml-pwa-manifest')) return;
+
+          // Manifest link — static file served by Streamlit at /app/static/manifest.json
+          const link = pd.createElement('link');
+          link.id = 'ml-pwa-manifest';
+          link.rel = 'manifest';
+          link.href = '/app/static/manifest.json';
+          pd.head.appendChild(link);
+
+          // Theme color (browser UI chrome)
+          const theme = pd.createElement('meta');
+          theme.name = 'theme-color';
+          theme.content = '#4cc9f0';
+          pd.head.appendChild(theme);
+
+          // iOS / Safari meta tags (no manifest support — these fill the gap)
+          const metas = [
+            ['apple-mobile-web-app-capable',        'yes'],
+            ['apple-mobile-web-app-status-bar-style','black-translucent'],
+            ['apple-mobile-web-app-title',           'ML Viz'],
+            ['mobile-web-app-capable',               'yes'],
+          ];
+          metas.forEach(([name, content]) => {
+            const m = pd.createElement('meta');
+            m.name = name; m.content = content;
+            pd.head.appendChild(m);
+          });
+
+          // Apple touch icon (iOS home screen icon)
+          const appleIcon = pd.createElement('link');
+          appleIcon.rel  = 'apple-touch-icon';
+          appleIcon.href = '/app/static/icon.svg';
+          pd.head.appendChild(appleIcon);
+
+          // Register service worker
+          if ('serviceWorker' in window.parent.navigator) {
+            window.parent.navigator.serviceWorker
+              .register('/app/static/sw.js', { scope: '/app/static/' })
+              .catch(() => {});
+          }
+        };
+        injectPWA();
+
         // Fix dropdown option colors in light mode.
         // Uses a passive interval (no MutationObserver / event listeners) so it never
         // interferes with BaseWeb's own click / selection handling.

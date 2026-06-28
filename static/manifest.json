@@ -1,0 +1,26 @@
+{
+  "name": "ML Algorithm Visualizer",
+  "short_name": "ML Viz",
+  "description": "Interactive Machine Learning algorithm visualizer built with Streamlit and Scikit-learn.",
+  "start_url": "/?nav=Home",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a101a",
+  "theme_color": "#4cc9f0",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "/app/static/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/app/static/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

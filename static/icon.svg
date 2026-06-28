@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="18" fill="#0a101a"/>
+  <rect x="14" y="62" width="13" height="22" rx="3" fill="#4cc9f0" opacity="0.6"/>
+  <rect x="32" y="44" width="13" height="40" rx="3" fill="#4cc9f0" opacity="0.8"/>
+  <rect x="50" y="28" width="13" height="56" rx="3" fill="#4cc9f0"/>
+  <polyline points="20,58 38,40 56,24 75,18" stroke="#ffcb77" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="75" cy="18" r="4" fill="#ffcb77"/>
+  <text x="50" y="97" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#4cc9f0" text-anchor="middle" letter-spacing="1">ML VIZ</text>
+</svg>
