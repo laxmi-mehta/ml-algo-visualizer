@@ -641,6 +641,7 @@ def apply_theme() -> None:
           });
         };
 
+        ensureMetaTag('meta[name="google-site-verification"]', 'name', 'i8YZglcfCaou4bCli_OWvu93WRISQVOKlVoaLbB_iDE');
         ensureMetaTag('meta[name="description"]',        'name',     __SEO_DESCRIPTION__);
         ensureMetaTag('meta[name="keywords"]',           'name',     __SEO_KEYWORDS__);
         ensureMetaTag('meta[name="author"]',             'name',     __APP_AUTHOR__);
