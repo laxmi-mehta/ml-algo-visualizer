@@ -15,4 +15,4 @@ COPY . .
 
 EXPOSE 7860
 
-CMD ["sh", "-c", "streamlit run app.py --server.address 0.0.0.0 --server.port ${PORT}"]
+CMD ["sh", "-c", "python -m app.config.seo_head && streamlit run app.py --server.address 0.0.0.0 --server.port ${PORT}"]

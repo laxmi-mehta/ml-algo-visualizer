@@ -1,0 +1,16 @@
+name: Keep HF Space Awake
+
+on:
+  schedule:
+    # Every 12 hours — HF free Spaces sleep after 48h of no traffic
+    - cron: "0 */12 * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Hugging Face Space
+        run: |
+          curl -s -o /dev/null -w "HTTP %{http_code}\n" --max-time 120 \
+            https://laxmimehta-ml-algo-visualizer.hf.space/

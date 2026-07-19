@@ -5,6 +5,7 @@ colorFrom: blue
 colorTo: indigo
 sdk: docker
 pinned: false
+short_description: Visualize and learn ML algorithms interactively
 ---
 
 # ML Algorithm Visualizer

@@ -3,7 +3,10 @@ from __future__ import annotations
 import streamlit as st
 
 from app.config.app_config import APP_DESCRIPTION, APP_TITLE, APP_TAGLINE
+from app.config.seo_head import patch_streamlit_index
 from app.config.theme import apply_theme
+
+patch_streamlit_index()
 from app.core.navigation import render_sidebar
 from app.core.registry import get_algorithm_by_name
 from app.pages.algorithm_page import render_algorithm_page
